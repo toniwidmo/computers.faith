@@ -1,0 +1,36 @@
+{
+  "sitetitle": "Agent M",
+  "tagline":"You can't spell KAZOO without AZO!",
+	"palette": "liquorice",
+  "theme": "fluxstate",
+
+	"themeoptions": {
+		"banner_image": "",
+		"site_image": ""
+	},
+
+	"modules": ["static"],
+
+	"firstpage": {"type": "static", "args": ["m.html"]},
+
+	"menu": [
+    {"label": "Agent M", "type": "static", "args": ["m.html"]},
+    {"label": "ChaosHex", "type": "static", "args": ["chaoshex.html"]},
+    {"label": "EnigMagick", "type": "static", "args": ["enigmagick.html"]}
+  ],
+
+	"socialmenu": {
+		"steemit": "",
+		"github": "https://github.com/toniwidmo/",
+		"linkedin": "",
+		"twitter": "",
+		"facebook": "https://www.facebook.com/toniwidmo23/",
+		"reddit": "",
+		"gplus": "",
+		"stackoverflow": "",
+		"link_url": "https://computers.faith/~kz69",
+		"email": ""
+	},
+
+	"dateformat": {"locale": "en-US", "options":{ "weekday": "long", "year": "numeric", "month": "long", "day": "numeric" }}
+}
