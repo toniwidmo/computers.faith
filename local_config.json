@@ -9,14 +9,16 @@
 		"site_image": ""
 	},
 
-	"modules": ["static"],
+	"modules": ["static","chaoshex","enigmagick"],
 
 	"firstpage": {"type": "static", "args": ["m.html"]},
 
 	"menu": [
     {"label": "Agent M", "type": "static", "args": ["m.html"]},
-    {"label": "ChaosHex", "type": "static", "args": ["chaoshex.html"]},
-    {"label": "EnigMagick", "type": "static", "args": ["enigmagick.html"]},
+    {"label": "ChaosHex", "type": "chaoshex", "args": [""]},
+    {"label": "About ChaosHex", "type": "static", "args": ["chaoshex.html"]},
+    {"label": "EnigMagick", "type": "enigmagick", "args": [""]},
+    {"label": "About EnigMagick", "type": "static", "args": ["enigmagick.html"]},
     {"label": "Magick and Technology", "type": "static", "args": ["magictech.html"]}
   ],
 

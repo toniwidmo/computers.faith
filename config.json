@@ -1,6 +1,6 @@
 {
   "sitetitle": "Blockpress.me",
-  "tagline":"The CMS with blockchains for its database...",
+  "tagline":"The API driven disembodied CMS",
 	"palette": "pistachiocream",
   "theme": "metaverse",
 
@@ -9,7 +9,7 @@
 		"site_image": ""
 	},
 
-	"modules": ["static","steem"],
+	"modules": ["static"],
 
 	"steem_options": {
 		"": ""
@@ -19,12 +19,9 @@
 
 	"menu": [
     {"label": "Home", "type": "static", "args": "default/welcome_to_blockpress.html"},
-	  {"label": "Anton's Posts", "type": "steem", "args": {"show":"posts", "user":"antonchanning", "tag":"blockpress", "count":10}},
-	  {"label": "Dana's Posts", "type": "steem", "args": {"show":"posts", "user":"dana-varahi", "tag":"blockpress", "count":10}}
   ],
 
 	"socialmenu": {
-		"steemit": "https://steemit.com/trending/blockpress",
 		"github": "https://github.com/blockpress/blockpress.me",
 		"linkedin": "",
 		"twitter": "",
