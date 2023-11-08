@@ -1,34 +1,44 @@
 // EnigMagick template
 var enigmagick_template;
+var enigmagick_template_loaded = false;
 
 /* A content module for a web based version of the ChaosHex software */
 function enigmagick_menuitem(args) {
-	return "javascript:enigmagick_load('');";
+	console.log( "enigmagick_menuitem." );
+	return "javascript:enigmagick_load('"+args+"');";
 }
 function enigmagick_load(args) {
-	displayEnigMagick();
+	console.log( "enigmagick_load." );
+	if(!enigmagick_template_loaded) {
+		// Try to call enigmagick again in 1/10 of a second.
+		setTimeout(function () {
+			enigmagick_load(args);
+		}, 100);
+		return null;
+	}
+
+	var content = enigmagick_template;
+	pushStateWithoutDuplicate('EnigMagick '+args, './?p=enigmagick/'+args);
+	enigmagick_display(content);
 }
 
 function enigmagick_display(content) {
+	console.log( "enigmagick_display." );
 	$('#contentArea').html(content);
 }
 
 function enigmagick_permlink(permlink) {
+	console.log( "enigmagick_permlink." );
 	permlink = permlink.join("/");
 	enigmagick_load(permlink);
 }
 
-function displayEnigMagick() {
-	var content = enigmagick_template;
 
-	// Append content to contentArea
-	//$('#contentArea').append(content);
-	$('#contentArea').html(content);
-}
 
 //Template loaded functions
 function enigmagickTemplateLoaded(template) {
 	enigmagick_template = template;
+	enigmagick_template_loaded = true;
 	console.log( "enigmagick template load was performed." );
 }
 //Load the templates
