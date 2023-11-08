@@ -36,8 +36,8 @@
 	},
 	
 	"data_sources": {
-		"enigmagick": {"enigmagick_api", "http://enigmagick/rest/"},
-		"blahaj": {"rss", "https://blahaj.zone/@toni.rss"}
+		"enigmagick": ["enigmagick_api", "http://enigmagick/rest/"],
+		"blahaj": ["rss", "https://blahaj.zone/@toni.rss"]
 	},
 
 	"dateformat": {"locale": "en-US", "options":{ "weekday": "long", "year": "numeric", "month": "long", "day": "numeric" }}
