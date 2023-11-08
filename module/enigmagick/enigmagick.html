@@ -1,6 +1,9 @@
 <div id="enigmagick">
     <h2>EnigMagick</h2>
     <div id="enigmagick_form" class="enclosure1">
+        <input type="text" name="search" id="enigmagick_input_search" style="width:80%;">
+        <input type="button" name="search_btn" id="enigmagick_input_sch_btn" value="Search for Matches" class="button1">
+        <input type="button" name="options_btn" id="enigmagick_input_opt_btn" value="Show Search Options" class="button2">
         <div id="enigmagick_search_options" class="enclosure2">
             <p>Select Cipher</p>
             <p>Select Text</p>
@@ -12,4 +15,13 @@
     <div id="enigmagick_matches" class="enclosure2">
         <p>Matches List</p>
     </div>
+    <div id="enigmagick_warning_message" class="enclosure3">
+        <h3>Warning</h3>
+        <p id="enigmagic_warning_message_body">EnigMagick API Not Defined.</p>
+    </div>
 </div>
+<style>
+    #enigmagick_warning_message, #enigmagick_matches, #enigmagick_triangle, #enigmagick_search_options {
+        display: none;
+    }
+</style>
