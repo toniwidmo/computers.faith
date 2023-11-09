@@ -86,6 +86,7 @@ function enigmagick_parse_args(args) {
 	let url_args = ''
 	if(args.search) {
 		console.log(args.search);
+		$("#enigmagick_input_search").prop("value",args.search);
 		push_msg += " Search for '"+args.search+"'";
 		url_args += args.search+'/'
 		if(args.cipher) {
