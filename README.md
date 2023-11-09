@@ -23,3 +23,8 @@ This is a Cyber Magic tool for 'hacking reality'. It was originally an MSDOS pro
 I wrote in the late 1990s, which has now been lost. I then wrote a BASH version which
 can be downloaded and installed on most Linux and other OSes that support a BASH shell.
 This is a stub for a third version, which will be web based. 
+
+# References
+* https://github.com/blockpress/blockpress.me
+* https://github.com/toniwidmo/enigmagick
+* https://sourceforge.net/projects/chaoshex/
