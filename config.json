@@ -18,7 +18,7 @@
 	"firstpage": {"type": "static", "args": ["default/welcome_to_blockpress.html"]},
 
 	"menu": [
-    {"label": "Home", "type": "static", "args": "default/welcome_to_blockpress.html"},
+    {"label": "Home", "type": "static", "args": "default/welcome_to_blockpress.html"}
   ],
 
 	"socialmenu": {
