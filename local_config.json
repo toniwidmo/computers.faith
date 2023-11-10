@@ -23,7 +23,6 @@
   ],
 
 	"socialmenu": {
-		"steemit": "",
 		"github": "https://github.com/toniwidmo/",
 		"linkedin": "",
 		"twitter": "",
@@ -32,7 +31,8 @@
 		"gplus": "",
 		"stackoverflow": "",
 		"link_url": "https://computers.faith/~kz69",
-		"email": ""
+		"email": "",
+		"fediverse": "@toni@blahaj.zone"
 	},
 	
 	"data_sources": {
