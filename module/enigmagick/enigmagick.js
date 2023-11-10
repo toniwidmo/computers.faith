@@ -89,7 +89,11 @@ function getCipherList() {
     }).done(processCipherList);
 } 
 function processCipherList(ciphers) {
-	console.log(ciphers);
+	for (let index = 0; index < ciphers.ciphers.length; ++index) {
+		const cipher = ciphers.ciphers[index];
+		console.log(cipher);
+		$("#enigmagick_cipher_options").append("<input type='button' value='"+cipher.name+"' class='button3'> ");
+	}
 }
 function getTextList() {
 	$.ajax({
@@ -99,6 +103,11 @@ function getTextList() {
 } 
 function processTextList(texts) {
 	console.log(texts);
+	for (let index = 0; index < texts.texts.length; ++index) {
+		const text = texts.texts[index];
+		console.log(text);
+		$("#enigmagick_text_options").append("<input type='button' value='"+text.title+"' class='button3'> ");
+	}
 }
 function getMatches() {
 	//
@@ -129,10 +138,12 @@ function enigmagick_parse_args(args) {
 		url_args += args.search+'/'
 		if(args.cipher) {
 			console.log(args.cipher);
+			$("#enigmagick_input_cipher").val(args.cipher);
 			push_msg += " using '"+args.cipher+"'";
 			url_args += args.cipher+'/'
 			if(args.text) {
 				console.log(args.text);
+				$("#enigmagick_input_text").val(args.text);
 				push_msg += " on '"+args.text+"'";
 				url_args += args.text+'/'
 			}

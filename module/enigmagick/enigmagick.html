@@ -1,12 +1,15 @@
 <div id="enigmagick">
     <h2>EnigMagick</h2>
     <div id="enigmagick_form" class="enclosure1">
+        <input type="hidden" name="cipher" id="enigmagick_input_cipher">
+        <input type="hidden" name="text" id="enigmagick_input_text">
+        <input type="hidden" name="show_triangle" id="enigmagick_input_show_triangle">
         <input type="text" name="search" id="enigmagick_input_search" style="width:80%;">
         <input type="button" name="search_btn" id="enigmagick_input_sch_btn" value="Search for Matches" class="button1">
         <input type="button" name="options_btn" id="enigmagick_input_opt_btn" value="Show Search Options" class="button2">
         <div id="enigmagick_search_options" class="enclosure2">
-            <p>Select Cipher</p>
-            <p>Select Text</p>
+            <div id="enigmagick_cipher_options">Using: </div>
+            <div id="enigmagick_text_options">Find Matches in: </div>
         </div>
     </div>
     <div id="enigmagick_triangle" class="enclosure2">
