@@ -44,6 +44,9 @@ function enigmagick_load(args) {
 		// Time to handle the arguments passed in for search.
 		args = JSON.parse(args.replace(/&quot;/g,'"'));
 		enigmagick_parse_args(args);
+
+		getCipherList();
+		getTextList();
 	} else {
 		enigmagick_warning_msg("EnigMagick Error: API Not Defined.");
 		pushStateWithoutDuplicate('EnigMagick Error: API Not Defined.', './?p=enigmagick/');
@@ -77,6 +80,41 @@ function enigmagick_permlink(permlink) {
 
 	enigmagick_load(args);
 }
+
+/* EnigMagick API Calls and Callbacks */
+function getCipherList() {
+	$.ajax({
+        type: 'GET',
+        url: enigmagick_api+"ciphers.php"
+    }).done(processCipherList);
+} 
+function processCipherList(ciphers) {
+	console.log(ciphers);
+}
+function getTextList() {
+	$.ajax({
+        type: 'GET',
+        url: enigmagick_api+"texts.php"
+    }).done(processTextList);
+} 
+function processTextList(texts) {
+	console.log(texts);
+}
+function getMatches() {
+	//
+} 
+function processMatches(matches) {
+	//
+}
+function getTriangle() {
+	//
+} 
+function processTriangle(triangle) {
+	//
+}
+
+
+
 
 /* EnigMagick Initialisation Functions */
 function enigmagick_parse_args(args) {
