@@ -103,16 +103,29 @@ hr {
 }
 
 .button2{
-  border-color: #ee9999;
-  background: #111111;
-  color: #ee9999;
+  border-color: #ee6666;
+  background: #ee9999;
+  color: #111111;
 }
 
 .button2:hover{
-  background: #ee9999;
-  color: #eeeeee;
+  color: #ee9999;
+  background: #111111;
   border-color: #eeeeee;
 }
+
+.button3{
+  border-color: #ee6666;
+  background: #111111;
+  color: #ee6666;
+}
+
+.button3:hover{
+  background: #ee9999;
+  color: #111111;
+  border-color: #eeeeee;
+}
+
 
 /*Box Shadow Classes
 (can be added to any element */

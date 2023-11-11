@@ -31,7 +31,7 @@ function enigmagick_load(args) {
 		//console.log(config.data_sources.enigmagick[0]);
 		if(typeof config.data_sources.enigmagick == "object" && config.data_sources.enigmagick[0] == "enigmagick_api") {
 			enigmagick_api = config.data_sources.enigmagick[1];
-			console.log( "enigmagick_api." );
+			console.log( "enigmagick_api detected." );
 		} else {
 			console.log("EnigMagick Error: API Incorrectly Defined.");
 		}
@@ -92,7 +92,7 @@ function processCipherList(ciphers) {
 	for (let index = 0; index < ciphers.ciphers.length; ++index) {
 		const cipher = ciphers.ciphers[index];
 		console.log(cipher);
-		$("#enigmagick_cipher_options").append("<input type='button' value='"+cipher.name+"' class='button3'> ");
+		$("#enigmagick_cipher_options").append("<input type='button' id='cipher_btn_"+cipher.short_name+"' name='"+cipher.short_name+"' value='"+cipher.name+"' class='button1 cipher_btn' onclick='enigmagick_selectCipher(this.name)'> ");
 	}
 }
 function getTextList() {
@@ -106,7 +106,7 @@ function processTextList(texts) {
 	for (let index = 0; index < texts.texts.length; ++index) {
 		const text = texts.texts[index];
 		console.log(text);
-		$("#enigmagick_text_options").append("<input type='button' value='"+text.title+"' class='button3'> ");
+		$("#enigmagick_text_options").append("<input type='button' id='text_btn_"+text.file.slice(0, -4)+"' name='"+text.file.slice(0, -4)+"' value='"+text.title+"' class='button1 text_btn' onclick='enigmagick_selectText(this.name)'> ");
 	}
 }
 function getMatches() {
@@ -154,13 +154,26 @@ function enigmagick_parse_args(args) {
 }
 
 /* EnigMagick Event Handling Functions */
+function enigmagick_selectCipher(cipher) {
+	console.log("enigmagick_selectCipher");
+	console.log(cipher);
+	$(".cipher_btn").addClass("button1").removeClass("button2");
+	$("#cipher_btn_"+cipher).addClass("button2").removeClass("button1");
+}
+function enigmagick_selectText(text) {
+	console.log("enigmagick_selectText");
+	console.log(text);
+	$(".text_btn").addClass("button1").removeClass("button2");
+	$("#text_btn_"+text).addClass("button2").removeClass("button1");
+}
+
 function enigmagick_sch_opt_btn_pressed() {
 	console.log( "enigmagick_sch_opt_btn_pressed()." );
 	if($("#enigmagick_search_options").is(":visible")) {
-		$("#enigmagick_input_opt_btn").prop("value","Show Search Options");
+		$("#enigmagick_input_opt_btn").prop("value","Show Search Options").addClass("button1").removeClass("button2");
 		$("#enigmagick_search_options").hide();
 	} else {
-		$("#enigmagick_input_opt_btn").prop("value","Hide Search Options");
+		$("#enigmagick_input_opt_btn").prop("value","Hide Search Options").addClass("button2").removeClass("button1");
 		$("#enigmagick_search_options").show();
 	}
 }
