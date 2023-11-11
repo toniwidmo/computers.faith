@@ -40,7 +40,7 @@ function enigmagick_load(args) {
 		$("#enigmagick_input_opt_btn").click(function(){ console.log( "search options button pressed." ); enigmagick_sch_opt_btn_pressed(); });
 		enigmagick_args = args;
 		console.log(args);
-		if(args=="") args="{}";
+		if(typeof args != "string" || args=="") args="{}";
 		console.log(args);
 	
 		// Time to handle the arguments passed in for search.
@@ -126,9 +126,10 @@ function processTextList(texts) {
 	}
 	enigmagick_selectText($("#enigmagick_input_text").val());
 
-	//Once texts are loaded, we are ready to launch an initial search, if one was defined.
+	//Once texts are loaded, we are ready to enable the search button, 
+	//and launch an initial search, if one was defined.
+	$('#enigmagick_input_sch_btn').prop('disabled', false).click(function(){ console.log( "search button pressed." ); getMatches(); });
 	if($("#enigmagick_input_search").val() != "") {
-		$('#enigmagick_input_sch_btn').prop('disabled', false).click(function(){ console.log( "search button pressed." ); getMatches(); });
 		getMatches();
 	}
 }
