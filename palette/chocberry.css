@@ -126,6 +126,11 @@ hr {
   border-color: #eeeeee;
 }
 
+.button1:disabled,.button2:disabled,.button3:disabled {
+  border-color: #aa9999;
+  background: #776666;
+  color: #aa9999;
+}
 
 /*Box Shadow Classes
 (can be added to any element */

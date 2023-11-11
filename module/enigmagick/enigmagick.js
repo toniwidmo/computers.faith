@@ -39,10 +39,13 @@ function enigmagick_load(args) {
 	if(enigmagick_api != "") {
 		$("#enigmagick_input_opt_btn").click(function(){ console.log( "search options button pressed." ); enigmagick_sch_opt_btn_pressed(); });
 		enigmagick_args = args;
+		console.log(args);
 		if(args=="") args="{}";
+		console.log(args);
 	
 		// Time to handle the arguments passed in for search.
 		args = JSON.parse(args.replace(/&quot;/g,'"'));
+		console.log(args);
 		enigmagick_parse_args(args);
 
 		getCipherList();
@@ -59,8 +62,12 @@ function enigmagick_display(content) {
 }
 
 function enigmagick_permlink(permlink) {
-	console.log( "enigmagick_permlink." );
+	console.log( "enigmagick_permlink start." );
 	let args, search, cipher, text;
+
+	console.log(permlink);
+	permlink = permlink.filter((str) => str !== '');
+	console.log(permlink);
 
 	switch(permlink.length) {
 		case 1:
@@ -77,6 +84,8 @@ function enigmagick_permlink(permlink) {
 			args = '{"search": "'+permlink[0]+'","cipher":"'+permlink[1]+'","text":"'+permlink[2]+'"}';
 			break;
 	}
+	console.log(args);
+	console.log( "enigmagick_permlink end." );
 
 	enigmagick_load(args);
 }
@@ -92,8 +101,12 @@ function processCipherList(ciphers) {
 	for (let index = 0; index < ciphers.ciphers.length; ++index) {
 		const cipher = ciphers.ciphers[index];
 		console.log(cipher);
+		if($("#enigmagick_input_cipher").val() == "") {
+			$("#enigmagick_input_cipher").val(cipher.short_name);
+		}
 		$("#enigmagick_cipher_options").append("<input type='button' id='cipher_btn_"+cipher.short_name+"' name='"+cipher.short_name+"' value='"+cipher.name+"' class='button1 cipher_btn' onclick='enigmagick_selectCipher(this.name)'> ");
 	}
+	enigmagick_selectCipher($("#enigmagick_input_cipher").val());
 }
 function getTextList() {
 	$.ajax({
@@ -106,14 +119,48 @@ function processTextList(texts) {
 	for (let index = 0; index < texts.texts.length; ++index) {
 		const text = texts.texts[index];
 		console.log(text);
+		if($("#enigmagick_input_text").val() == "") {
+			$("#enigmagick_input_text").val(text.file.slice(0, -4));
+		}
 		$("#enigmagick_text_options").append("<input type='button' id='text_btn_"+text.file.slice(0, -4)+"' name='"+text.file.slice(0, -4)+"' value='"+text.title+"' class='button1 text_btn' onclick='enigmagick_selectText(this.name)'> ");
+	}
+	enigmagick_selectText($("#enigmagick_input_text").val());
+
+	//Once texts are loaded, we are ready to launch an initial search, if one was defined.
+	if($("#enigmagick_input_search").val() != "") {
+		$('#enigmagick_input_sch_btn').prop('disabled', false).click(function(){ console.log( "search button pressed." ); getMatches(); });
+		getMatches();
 	}
 }
 function getMatches() {
-	//
+	let search, cipher, text;
+	search = $("#enigmagick_input_search").val();
+	cipher = $("#enigmagick_input_cipher").val();
+	text = $("#enigmagick_input_text").val();
+
+	$.ajax({
+        type: 'GET',
+        url: enigmagick_api+"matches.php?search="+search+"&cipher="+cipher+"&text="+text+".txt"
+    }).done(processMatches);
 } 
 function processMatches(matches) {
-	//
+	let search, cipher, text;
+	search = $("#enigmagick_input_search").val();
+	cipher = $("#enigmagick_input_cipher").val();
+	text = $("#enigmagick_input_text").val();
+
+	let title = $("#text_btn_"+text).val();
+
+	let push_msg = "EnigMagick: Matches for "+matches.value+" found in "+title
+	pushStateWithoutDuplicate(push_msg, './?p=enigmagick/'+search+'/'+cipher+'/'+text);
+
+	$("#enigmagick_matches").html("").show();
+	$("#enigmagick_matches").append("<h3>"+matches.matches.length+" matches for "+matches.value+" found in "+title+"</h3>");
+	$("#enigmagick_matches").append("<ol id='enigmagick_matches_list'></ol>");
+	
+	for (let index = 0; index < matches.matches.length; ++index) {
+		$("#enigmagick_matches_list").append("<li>"+matches.matches[index]+"</li>");
+	}
 }
 function getTriangle() {
 	//
@@ -157,12 +204,14 @@ function enigmagick_parse_args(args) {
 function enigmagick_selectCipher(cipher) {
 	console.log("enigmagick_selectCipher");
 	console.log(cipher);
+	$("#enigmagick_input_cipher").val(cipher);
 	$(".cipher_btn").addClass("button1").removeClass("button2");
 	$("#cipher_btn_"+cipher).addClass("button2").removeClass("button1");
 }
 function enigmagick_selectText(text) {
 	console.log("enigmagick_selectText");
 	console.log(text);
+	$("#enigmagick_input_text").val(text);
 	$(".text_btn").addClass("button1").removeClass("button2");
 	$("#text_btn_"+text).addClass("button2").removeClass("button1");
 }
