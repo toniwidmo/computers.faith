@@ -36,7 +36,7 @@
 	},
 	
 	"data_sources": {
-		"enigmagick": ["enigmagick_api", "http://computers.faith/enigmagick/rest/"],
+		"enigmagick": ["enigmagick_api", "https://computers.faith/enigmagick/rest/"],
 		"blahaj": ["rss", "https://blahaj.zone/@toni.rss"]
 	},
 
