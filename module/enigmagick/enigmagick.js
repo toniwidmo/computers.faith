@@ -94,7 +94,6 @@ function enigmagick_permlink(permlink) {
 function getCipherList() {
 	$.ajax({
         type: 'GET',
-		dataType: 'jsonp',
         url: enigmagick_api+"ciphers.php"
     }).done(processCipherList);
 } 
@@ -112,7 +111,6 @@ function processCipherList(ciphers) {
 function getTextList() {
 	$.ajax({
         type: 'GET',
-		dataType: 'jsonp',
         url: enigmagick_api+"texts.php"
     }).done(processTextList);
 } 
@@ -143,7 +141,6 @@ function getMatches() {
 
 	$.ajax({
         type: 'GET',
-		dataType: 'jsonp',
         url: enigmagick_api+"matches.php?search="+search+"&cipher="+cipher+"&text="+text+".txt"
     }).done(processMatches);
 } 
