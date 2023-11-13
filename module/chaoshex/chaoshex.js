@@ -1,5 +1,6 @@
 // Chaoshex template
 var chaoshex_template;
+var chaoshex_template_loaded = false;
 
 /* A content module for a web based version of the ChaosHex software */
 function chaoshex_menuitem(args) {
@@ -7,6 +8,14 @@ function chaoshex_menuitem(args) {
 }
 function chaoshex_load(args) {
 	displayChaosHex();
+	if(!chaoshex_template_loaded) {
+		// Try to call enigmagick again in 1/10 of a second.
+		setTimeout(function () {
+			chaoshex_load(args);
+		}, 100);
+		return null;
+	}
+	pushStateWithoutDuplicate('ChaosHex3', './?p=chaoshex/');
 }
 
 function chaoshex_display(content) {
@@ -29,6 +38,7 @@ function displayChaosHex() {
 //Template loaded functions
 function chaoshexTemplateLoaded(template) {
 	chaoshex_template = template;
+	chaoshex_template_loaded = true;
 	console.log( "chaoshex template load was performed." );
 }
 //Load the templates
