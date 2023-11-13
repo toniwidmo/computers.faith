@@ -28,11 +28,12 @@ value triangle, and having the matches clickable to display their own value tria
 (*) We can't guarantee the computers.faith server will remain open, so it is still
 best to get your own server if you can.
 
-## ChaosHex 3.0
-This is a Cyber Magic tool for 'hacking reality'. It was originally an MSDOS program
-I wrote in the late 1990s, which has now been lost. I then wrote a BASH version which
-can be downloaded and installed on most Linux and other OSes that support a BASH shell.
-This is a stub for a third version, which will be web based. 
+## ChaosHex3
+This is a Cyber Magic tool for 'hacking reality'. ChaosHex 1.0 was an MSDOS program
+I wrote in the late 1990s, which has now been lost. I then wrote ChaosHex 2.0 as a BASH script 
+which can be downloaded and installed on most Linux and other OSes that support a BASH shell.
+This is a stub for a third version, which will be web based. The BASH version may also in
+time receive updates, but this version is my new priority.
 
 # References
 * https://github.com/blockpress/blockpress.me
