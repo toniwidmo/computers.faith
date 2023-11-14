@@ -9,15 +9,36 @@
         font-size: 1.2em;
         position: relative;
         margin: 0.5em;
+        background-color: #333; 
+        padding: 0em 0.25em;
     }
+    #chaoshex_terminal, #chaoshex_text_input {
+        background: linear-gradient(to bottom, #333, #333 50%, #3a3a3a 50%, #3a3a3a); 
+        background-size: 100% 4px;
+    }
+    #chaoshex_cursor { content: "_"; font-weight: bold; animation: blinking 0.75s step-end infinite; }
+    @keyframes blinking { from, to { visibility: hidden; } 50% { visibility: visible; } }
+    #chaoshex_terminal p { color: #ffedcc; white-space: pre-wrap; word-wrap: break-word; margin-top: 2px; margin-bottom: 0px; }
+    #chaoshex_terminal p { text-shadow: 0 0 3px #ffa500; text-shadow: 0 0 10px #ffa500; }
 </style>
+
 <div id="chaoshex">
     <h1>ChaosHex3</h1>
-    <div id="chaoshex_terminal" class="enclosure1">Terminal</div>
+    <div id="chaoshex_terminal" class="enclosure1">
+        <p>Cyber-magic Hacking Aid Operating System: Hex EXpert</p>
+        <p>Welcome to ChaosHex3 Client</p>
+        <p>&nbsp;</p>
+        <p>Log In to access ChaosHex server...</p>
+        <p id="chaoshex_prompt">-]&gt;|&lt;[- :<span id="chaoshex_cursor">_</span></p>
+    </div>
     <div id="chaoshex_context_buttons" class="enclosure2">
-        <input type="button" class="button1" value="Log in">
+        <input type="button" id="chaoshex_login_btn" class="button1 chaoshex_btn_login" value="Log in">
+        <input type="button" id="chaoshex_cast_btn" class="button1 chaoshex_btn_menu1" value="Cast" style="display: none;">
+        <input type="button" id="chaoshex_scry_btn" class="button1 chaoshex_btn_menu1" value="Scry" style="display: none;">
+        <input type="button" id="chaoshex_summon_btn" class="button1 chaoshex_btn_menu1" value="Summon" style="display: none;">
+        <input type="button" id="chaoshex_logout_btn" class="button1 chaoshex_btn_menu1" value="Log out" style="display: none;">
     </div>
     <div id="chaoshex_text_input_box" class="enclosure2">
-        <input type="text" class="button1" style="width: 50%">
+        <input type="text" id="chaoshex_text_input" style="width: 50%"><input type="button" class="button2" value="Enter">
     </div>
 </div>

@@ -4,11 +4,10 @@ var enigmagick_template_loaded = false;
 var enigmagick_api="";
 var enigmagick_args;
 
-/* A content module for a web based version of the ChaosHex software */
+/* A content module for a web based version of the EnigMagick software */
 
 /* BlackPress Module Standard Functions */
 function enigmagick_menuitem(args) {
-	console.log( "enigmagick_menuitem." );
 	return "javascript:enigmagick_load('"+args+"');";
 }
 function enigmagick_load(args) {
