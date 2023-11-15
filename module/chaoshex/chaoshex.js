@@ -69,7 +69,7 @@ function chaoshex_login_btn_pressed() {
 	chaoshex_terminal_print("");
 	setTimeout(function () {
 		chaoshex_terminal_print("Log In Successfull");
-		chaoshex_terminal_print("Welcome anon23 to the ChaosHex server");
+		chaoshex_terminal_print("Welcome anon23 to the ChaosHex botnet");
 		chaoshex_btn_display("menu1");
 		chaoshex_terminal_print("Please select a command...");
 		chaoshex_terminal_print("");
