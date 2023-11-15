@@ -65,11 +65,11 @@ function chaoshex_btn_display(mode) {
 function chaoshex_login_btn_pressed() {
 	console.log("log in function reached.");
 	chaoshex_terminal_print("-]&gt;|&lt;[- : login anon23");
-	chaoshex_terminal_print("Logging in to ChaosHex as anon23");
+	chaoshex_terminal_print("Connecting to ChaosHex as anon23");
 	chaoshex_terminal_print("");
 	setTimeout(function () {
-		chaoshex_terminal_print("Log In Successfull");
-		chaoshex_terminal_print("Welcome anon23 to the ChaosHex botnet");
+		chaoshex_terminal_print("Hivemind Connection Successfull");
+		chaoshex_terminal_print("Welcome anon23 to the ChaosHex Hivemind");
 		chaoshex_btn_display("menu1");
 		chaoshex_terminal_print("Please select a command...");
 		chaoshex_terminal_print("");
