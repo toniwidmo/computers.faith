@@ -26,11 +26,27 @@ function chaoshex_display(content) {
 	$('#contentArea').html(content);
 
 	// Now add click methods to the buttons.
+	// Login Menu options...
 	$('#chaoshex_login_btn').click(function(){ chaoshex_login_btn_pressed(); });
+
+	// Top Menu options...
 	$('#chaoshex_cast_btn').click(function(){ chaoshex_cast_btn_pressed(); });
 	$('#chaoshex_scry_btn').click(function(){ chaoshex_scry_btn_pressed(); });
 	$('#chaoshex_summon_btn').click(function(){ chaoshex_summon_btn_pressed(); });
+	$('#chaoshex_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
 	$('#chaoshex_logout_btn').click(function(){ chaoshex_logout_btn_pressed(); });
+
+	// Cast Menu options...
+	$('#chaoshex_cast_cancel_btn').click(function(){ chaoshex_cast_cancel_btn_pressed(); });
+	$('#chaoshex_cast_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
+
+	// Scry Menu options...
+	$('#chaoshex_scry_cancel_btn').click(function(){ chaoshex_scry_cancel_btn_pressed(); });
+	$('#chaoshex_scry_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
+
+	// Summon Menu options...
+	$('#chaoshex_summon_cancel_btn').click(function(){ chaoshex_summon_cancel_btn_pressed(); });
+	$('#chaoshex_summon_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
 }
 
 function chaoshex_permlink(permlink) {
@@ -74,14 +90,90 @@ function chaoshex_logout_btn_pressed() {
 	}, 500);
 }
 
+function chaoshex_cls_btn_pressed() {
+	console.log("cls function reached.");
+	chaoshex_terminal_print("-]&gt;|&lt;[- : cls");
+	setTimeout(function () {
+		$( ".chaoshex_cls" ).remove();
+	}, 500);
+}
+
+function chaoshex_cast_btn_pressed() {
+	console.log("cast function reached.");
+	chaoshex_terminal_print("-]&gt;|&lt;[- : cast");
+	chaoshex_terminal_print("Cast a spell with ChaosHex");
+	chaoshex_terminal_print("");
+	setTimeout(function () {
+		chaoshex_terminal_print("Select option: ");
+		chaoshex_terminal_print("");
+		chaoshex_btn_display("cast");
+	}, 500);
+}
+
+function chaoshex_cast_cancel_btn_pressed() {
+	console.log("cast function reached.");
+	chaoshex_terminal_print("-]&gt;|&lt;[- : cancel");
+	chaoshex_terminal_print("Spell cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_btn_display("menu1");
+	}, 500);
+}
+
+function chaoshex_scry_btn_pressed() {
+	console.log("scry function reached.");
+	chaoshex_terminal_print("-]&gt;|&lt;[- : scry");
+	chaoshex_terminal_print("Divination with ChaosHex");
+	chaoshex_terminal_print("");
+	setTimeout(function () {
+		chaoshex_terminal_print("Select option: ");
+		chaoshex_terminal_print("");
+		chaoshex_btn_display("scry");
+	}, 500);
+}
+
+function chaoshex_scry_cancel_btn_pressed() {
+	console.log("scry function reached.");
+	chaoshex_terminal_print("-]&gt;|&lt;[- : cancel");
+	chaoshex_terminal_print("Divination cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_btn_display("menu1");
+	}, 500);
+}
+
+function chaoshex_summon_btn_pressed() {
+	console.log("cast function reached.");
+	chaoshex_terminal_print("-]&gt;|&lt;[- : summon");
+	chaoshex_terminal_print("Evoke entity with ChaosHex");
+	chaoshex_terminal_print("");
+	setTimeout(function () {
+		chaoshex_terminal_print("Select option: ");
+		chaoshex_terminal_print("");
+		chaoshex_btn_display("summon");
+	}, 500);
+}
+
+function chaoshex_summon_cancel_btn_pressed() {
+	console.log("summon function reached.");
+	chaoshex_terminal_print("-]&gt;|&lt;[- : cancel");
+	chaoshex_terminal_print("Evocation cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_btn_display("menu1");
+	}, 500);
+}
 
 /* Terminal Handling Functions */
 function chaoshex_terminal_print(html) {
 	// Add str to terminal
 	if(html == '') { html = "&nbsp;"}
-	var line = `<p>${html}</p>`; 
+	var line = `<p class="chaoshex_cls">${html}</p>`; 
 console.log(line);
 	$(line).insertBefore("#chaoshex_prompt");
+	$('#chaoshex_terminal').animate({
+		scrollTop: $("#chaoshex_terminal").prop("scrollHeight")
+	}, 200);
 }
 
 //Template loaded functions
