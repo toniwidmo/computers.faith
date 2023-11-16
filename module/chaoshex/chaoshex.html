@@ -21,6 +21,50 @@
     @keyframes blinking { from, to { visibility: hidden; } 50% { visibility: visible; } }
     #chaoshex_terminal p { color: #ffedcc; white-space: pre-wrap; word-wrap: break-word; margin-top: 2px; margin-bottom: 0px; }
     #chaoshex_terminal p { text-shadow: 0 0 3px #ffa500; text-shadow: 0 0 10px #ffa500; }
+
+    .chaoshex_octarine {
+	    animation: hue-rotate 1s infinite;
+	}
+    .chaoshex_white {
+	    background-color: #fff;
+        color: #036;
+	    border-color: #9cf;
+	}
+    .chaoshex_yellow {
+	    background-color: rgb(254, 241, 121);
+        color: rgb(72, 53, 5);
+	    border-color: rgb(208, 174, 0);
+	}
+    .chaoshex_blue {
+	    background-color: rgb(0, 16, 94);
+        color: rgb(255, 226, 163);
+	    border-color: rgb(18, 14, 255);
+	}
+    .chaoshex_orange {
+        background-color: rgb(255, 166, 115);
+        color: rgb(55, 22, 14);
+        border-color: rgb(255, 96, 0);
+	}
+    .chaoshex_black {
+	    background-color: #000;
+        color: #ccc;
+	    border-color: #222;
+	}
+    .chaoshex_purple {
+	    background-color: rgb(39, 0, 89);
+        color: #ccc;
+	    border-color: rgb(64, 0, 255);
+	}
+    .chaoshex_red {
+	    background-color: rgb(89, 0, 0);
+        color: rgb(254, 178, 55);
+	    border-color: rgb(255, 0, 0);
+	}
+    .chaoshex_green {
+	    background-color: rgb(0, 100, 17);
+        color: rgb(146, 255, 148);
+	    border-color: #10f927;
+	}
 </style>
 
 <div id="chaoshex">
@@ -60,6 +104,6 @@
         <input type="button" id="chaoshex_summon_cancel_btn" class="button1 chaoshex_btn_summon" value="Cancel" style="display: none;">
     </div>
     <div id="chaoshex_text_input_box" class="enclosure2">
-        <span id="chaoshex_input_prompt">-]&gt;|&lt;[- :</span><input type="text" id="chaoshex_text_input" style="width: 50%" disabled="true"><input type="button" class="button2" value="Enter">
+        <span id="chaoshex_input_prompt">-]&gt;|&lt;[- :</span><input type="text" id="chaoshex_text_input" style="width: 50%"><input type="button" id="chaoshex_enter_btn" class="button2" value="Enter">
     </div>
 </div>
