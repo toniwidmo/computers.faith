@@ -4,6 +4,22 @@ var chaoshex_template_loaded = false;
 
 var chaoshex_text_callback_mode = 'login';
 
+
+// EnigMagick API integration 
+var chaoshex_enigmagick_api_enabled = false;
+var chaoshex_enigmagick_texts;
+var chaoshex_enigmagick_ciphers;
+var chaoshex_enigmagick_matches;
+
+// Spell Settings
+var chaoshex_spell_mode;
+var chaoshex_spell_target_x;
+var chaoshex_spell_target_y;
+var chaoshex_statement_of_intent;
+var chaoshex_statement_of_intent_value;
+var chaoshex_statement_of_intent_matches;
+
+
 /* A content module for a web based version of the ChaosHex software */
 
 /* BlackPress Module Standard Functions */
@@ -42,8 +58,17 @@ function chaoshex_display(content) {
 	$('#chaoshex_logout_btn').click(function(){ chaoshex_logout_btn_pressed(); });
 
 	// Cast Menu options...
-	$('#chaoshex_cast_cancel_btn').click(function(){ chaoshex_cast_cancel_btn_pressed(); });
+	$('#chaoshex_cast_cancel_btn').click(function(){ chaoshex_cancel_btn_pressed(); });
 	$('#chaoshex_cast_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
+	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_octarine_btn_pressed(); });
+	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_psyche_btn_pressed(); });
+	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_ego_btn_pressed(); });
+	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_play_btn_pressed(); });
+	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_work_btn_pressed(); });
+	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_death_btn_pressed(); });
+	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_sex_btn_pressed(); });
+	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_war_btn_pressed(); });
+	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_love_btn_pressed(); });
 
 	// Scry Menu options...
 	$('#chaoshex_scry_cancel_btn').click(function(){ chaoshex_scry_cancel_btn_pressed(); });
@@ -62,112 +87,142 @@ function chaoshex_permlink(permlink) {
 /* Button Mode Functions */
 function chaoshex_btn_display(mode) {
 	console.log("chaoshex_btn_display("+mode+")");
+	chaoshex_text_callback_mode = mode;
 	$("#chaoshex_context_buttons input").hide();
 	$(".chaoshex_btn_"+mode).show();
 }
 
 /* Button Press Functions */
 function chaoshex_enter_btn_pressed() {
-	let typed_msg = $("#chaoshex_text_input").val();
-	chaoshex_terminal_print("-]&gt;|&lt;[- : "+typed_msg);
+	let cmd = $("#chaoshex_text_input").val();
+	chaoshex_terminal_print("-]&gt;|&lt;[- : "+cmd);
 	$("#chaoshex_text_input").val("");
 
-	switch(chaoshex_text_callback_mode) {
+	switch(cmd) {
+		case "debug":
+			chaoshex_terminal_print("cmd : "+cmd);
+			chaoshex_terminal_print("chaoshex_text_callback_mode : "+chaoshex_text_callback_mode);
+			return true;
+			break;
 		case "login":
-			if(typed_msg == 'login') {
+			if(chaoshex_text_callback_mode == 'login') {
 				chaoshex_login_action();
 				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
 			}
 			break;
-		case "menu1":
-			switch(typed_msg) {
-				case 'logout':
-					chaoshex_logout_action();
+		case "logout":
+			if(chaoshex_text_callback_mode != 'login') {
+				chaoshex_logout_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
+			break;
+		case "cls":
+			chaoshex_cls_action();
+			return true;
+			break;
+		case "cancel":
+			switch(chaoshex_text_callback_mode) {
+				case "cast":
+				case "octarine":
+				case "psyche":
+				case "ego":
+				case "play":
+				case "work":
+				case "death":
+				case "sex":
+				case "war":
+				case "love":
+					chaoshex_cast_cancel_action();
 					return true;
 					break;
-				case 'cls':
-					chaoshex_cls_action();
+				case "scry":
+					chaoshex_scry_cancel_action();
 					return true;
 					break;
-				case 'cast':
-					chaoshex_cast_action();
+				case "summon":
+					chaoshex_summon_cancel_action();
 					return true;
 					break;
 				default:
-					break;
+					chaoshex_cmd_not_available();
+					return false;
 			}
 			break;
 		case "cast":
-			switch(typed_msg) {
-				case 'cancel':
-					chaoshex_cast_cancel_action();
-					return true;
-					break;
-				case 'cls':
-					chaoshex_cls_action();
-					return true;
-					break;
-				case 'octarine':
-					chaoshex_octarine_action();
-					return true;
-					break;
-				case 'psyche':
-					chaoshex_psyche_action();
-					return true;
-					break;
-				case 'ego':
-					chaoshex_ego_action();
-					return true;
-					break;
-				case 'play':
-					chaoshex_play_action();
-					return true;
-					break;
-				case 'work':
-					chaoshex_work_action();
-					return true;
-					break;
-				case 'death':
-					chaoshex_death_action();
-					return true;
-					break;
-				case 'sex':
-					chaoshex_sex_action();
-					return true;
-					break;
-				case 'war':
-					chaoshex_war_action();
-					return true;
-					break;
-				case 'love':
-					chaoshex_love_action();
-					return true;
-					break;
-				default:
-					break;
+			if(chaoshex_text_callback_mode == 'menu1') {
+				chaoshex_cast_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
 			}
 			break;
-		case "octarine":
-			switch(typed_msg) {
-				case 'cancel':
-					chaoshex_cast_cancel_action();
-					return true;
-					break;
-				case 'cls':
-					chaoshex_cls_action();
-					return true;
-					break;
-				default:
+		case "ocatine":
+			if(chaoshex_text_callback_mode == 'cast') {
+				chaoshex_octarine_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
+			break;
+		case 'psyche':
+			chaoshex_psyche_action();
+			return true;
+			break;
+		case 'ego':
+			chaoshex_ego_action();
+			return true;
+			break;
+		case 'play':
+			chaoshex_play_action();
+			return true;
+			break;
+		case 'work':
+			chaoshex_work_action();
+			return true;
+			break;
+		case 'death':
+			chaoshex_death_action();
+			return true;
+			break;
+		case 'sex':
+			chaoshex_sex_action();
+			return true;
+			break;
+		case 'war':
+			chaoshex_war_action();
+			return true;
+			break;
+		case 'love':
+			chaoshex_love_action();
+			return true;
+			break;
+		default:
+			switch(chaoshex_text_callback_mode) {
+				case "octarine":
 					chaoshex_octarine_spell(typed_msg);
 					return true;
 					break;
+				case "psyche":
+				case "ego":
+				case "play":
+				case "work":
+				case "death":
+				case "sex":
+				case "war":
+				case "love":
+					break;
 			}
 			break;
-		defaut:
-			chaoshex_void_mode_error();
-			return false;
-			break;
 	}
+
 	chaoshex_unknown_cmd();
 	return false;
 }
@@ -208,8 +263,7 @@ function chaoshex_login_action() {
 	setTimeout(function () {
 		chaoshex_terminal_print("Hivemind Connection Successfull");
 		chaoshex_terminal_print("Welcome anon23 to the ChaosHex Hivemind");
-		chaoshex_text_callback_mode = 'menu1';
-		chaoshex_btn_display(chaoshex_text_callback_mode);
+		chaoshex_btn_display('menu1');
 		chaoshex_terminal_print("Please select a command...");
 		chaoshex_terminal_print("");
 	}, 1500);
@@ -235,8 +289,7 @@ function chaoshex_logout_action() {
 		chaoshex_terminal_print("Hivemind Disconnected");
 		chaoshex_terminal_print("Log out Complete");
 		chaoshex_terminal_print("");
-		chaoshex_text_callback_mode = 'login';
-		chaoshex_btn_display(chaoshex_text_callback_mode);
+		chaoshex_btn_display('login');
 		chaoshex_terminal_print("");
 	}, 1000);
 }
@@ -266,8 +319,7 @@ function chaoshex_cast_action() {
 	setTimeout(function () {
 		chaoshex_terminal_print("Select option: ");
 		chaoshex_terminal_print("");
-		chaoshex_text_callback_mode = 'cast';
-		chaoshex_btn_display(chaoshex_text_callback_mode);
+		chaoshex_btn_display('cast');
 	}, 500);
 }
 
@@ -281,8 +333,7 @@ function chaoshex_cast_cancel_action() {
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
 		chaoshex_terminal_print("");
-		chaoshex_text_callback_mode = 'menu1';
-		chaoshex_btn_display(chaoshex_text_callback_mode);
+		chaoshex_btn_display('menu1');
 	}, 500);
 }
 
@@ -298,13 +349,13 @@ function chaoshex_octarine_action() {
 	setTimeout(function () {
 		chaoshex_terminal_print("Octarine Spell Template: 'Magically Empower [X]'");
 		chaoshex_terminal_print("Choose [X]: ");
-		chaoshex_text_callback_mode = 'octarine';
-		chaoshex_btn_display(chaoshex_text_callback_mode);
+		chaoshex_btn_display('octarine');
 	}, 500);
 }
 
 function chaoshex_octarine_spell(target_x) {
 	chaoshex_terminal_print("Magically Empower "+target_x);
+	chaoshex_btn_display('dgsgdsg');
 }
 
 
@@ -314,8 +365,7 @@ function chaoshex_octarine_cancel_btn_pressed() {
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
 		chaoshex_terminal_print("");
-		chaoshex_text_callback_mode = 'cast';
-		chaoshex_btn_display(chaoshex_text_callback_mode);
+		chaoshex_btn_display('cast');
 	}, 500);
 }
 
@@ -329,8 +379,6 @@ function chaoshex_scry_btn_pressed() {
 		chaoshex_terminal_print("Select option: ");
 		chaoshex_terminal_print("");
 		chaoshex_btn_display("scry");
-		chaoshex_text_callback_mode = 'scry';
-		chaoshex_btn_display(chaoshex_text_callback_mode);
 	}, 500);
 }
 
@@ -340,8 +388,7 @@ function chaoshex_scry_cancel_btn_pressed() {
 	chaoshex_terminal_print("Divination cancelled");
 	setTimeout(function () {
 		chaoshex_terminal_print("");
-		chaoshex_text_callback_mode = 'menu1';
-		chaoshex_btn_display(chaoshex_text_callback_mode);
+		chaoshex_btn_display('menu1');
 	}, 500);
 }
 
@@ -354,8 +401,7 @@ function chaoshex_summon_btn_pressed() {
 	setTimeout(function () {
 		chaoshex_terminal_print("Select option: ");
 		chaoshex_terminal_print("");
-		chaoshex_text_callback_mode = 'summon';
-		chaoshex_btn_display(chaoshex_text_callback_mode);
+		chaoshex_btn_display('summon');
 	}, 500);
 }
 
@@ -365,8 +411,7 @@ function chaoshex_summon_cancel_btn_pressed() {
 	chaoshex_terminal_print("Evocation cancelled");
 	setTimeout(function () {
 		chaoshex_terminal_print("");
-		chaoshex_text_callback_mode = 'menu1';
-		chaoshex_btn_display(chaoshex_text_callback_mode);
+		chaoshex_btn_display('menu1');
 	}, 500);
 }
 
