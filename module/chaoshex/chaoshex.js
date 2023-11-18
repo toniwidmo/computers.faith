@@ -2,6 +2,7 @@
 var chaoshex_template;
 var chaoshex_template_loaded = false;
 
+var chaoshex_prompt = "-[&gt;|&lt;]- :";
 var chaoshex_text_callback_mode = 'login';
 
 
@@ -61,14 +62,14 @@ function chaoshex_display(content) {
 	$('#chaoshex_cast_cancel_btn').click(function(){ chaoshex_cancel_btn_pressed(); });
 	$('#chaoshex_cast_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
 	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_octarine_btn_pressed(); });
-	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_psyche_btn_pressed(); });
-	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_ego_btn_pressed(); });
-	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_play_btn_pressed(); });
-	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_work_btn_pressed(); });
-	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_death_btn_pressed(); });
-	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_sex_btn_pressed(); });
-	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_war_btn_pressed(); });
-	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_love_btn_pressed(); });
+	$('#chaoshex_cast_psyche_btn').click(function(){ chaoshex_psyche_btn_pressed(); });
+	$('#chaoshex_cast_ego_btn').click(function(){ chaoshex_ego_btn_pressed(); });
+	$('#chaoshex_cast_play_btn').click(function(){ chaoshex_play_btn_pressed(); });
+	$('#chaoshex_cast_work_btn').click(function(){ chaoshex_work_btn_pressed(); });
+	$('#chaoshex_cast_death_btn').click(function(){ chaoshex_death_btn_pressed(); });
+	$('#chaoshex_cast_sex_btn').click(function(){ chaoshex_sex_btn_pressed(); });
+	$('#chaoshex_cast_war_btn').click(function(){ chaoshex_war_btn_pressed(); });
+	$('#chaoshex_cast_love_btn').click(function(){ chaoshex_love_btn_pressed(); });
 
 	// Scry Menu options...
 	$('#chaoshex_scry_cancel_btn').click(function(){ chaoshex_scry_cancel_btn_pressed(); });
@@ -95,7 +96,7 @@ function chaoshex_btn_display(mode) {
 /* Button Press Functions */
 function chaoshex_enter_btn_pressed() {
 	let cmd = $("#chaoshex_text_input").val();
-	chaoshex_terminal_print("-]&gt;|&lt;[- : "+cmd);
+	chaoshex_terminal_print(chaoshex_prompt+" "+cmd);
 	$("#chaoshex_text_input").val("");
 
 	switch(cmd) {
@@ -163,7 +164,7 @@ function chaoshex_enter_btn_pressed() {
 				return false;
 			}
 			break;
-		case "ocatine":
+		case "octarine":
 			if(chaoshex_text_callback_mode == 'cast') {
 				chaoshex_octarine_action();
 				return true;
@@ -207,17 +208,40 @@ function chaoshex_enter_btn_pressed() {
 		default:
 			switch(chaoshex_text_callback_mode) {
 				case "octarine":
-					chaoshex_octarine_spell(typed_msg);
+					chaoshex_octarine_spell(cmd);
 					return true;
 					break;
 				case "psyche":
+					chaoshex_psyche_spell(cmd);
+					return true;
+					break;
 				case "ego":
+					chaoshex_ego_spell(cmd);
+					return true;
+					break;
 				case "play":
+					chaoshex_play_spell(cmd);
+					return true;
+					break;
 				case "work":
+					chaoshex_work_spell(cmd);
+					return true;
+					break;
 				case "death":
+					chaoshex_death_spell(cmd);
+					return true;
+					break;
 				case "sex":
+					chaoshex_sex_spell(cmd);
+					return true;
+					break;
 				case "war":
+					chaoshex_war_spell(cmd);
+					return true;
+					break;
 				case "love":
+					chaoshex_love_spell(cmd);
+					return true;
 					break;
 			}
 			break;
@@ -289,6 +313,7 @@ function chaoshex_logout_action() {
 		chaoshex_terminal_print("Hivemind Disconnected");
 		chaoshex_terminal_print("Log out Complete");
 		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
 		chaoshex_btn_display('login');
 		chaoshex_terminal_print("");
 	}, 1000);
@@ -319,6 +344,7 @@ function chaoshex_cast_action() {
 	setTimeout(function () {
 		chaoshex_terminal_print("Select option: ");
 		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
 		chaoshex_btn_display('cast');
 	}, 500);
 }
@@ -333,6 +359,7 @@ function chaoshex_cast_cancel_action() {
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
 		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
 		chaoshex_btn_display('menu1');
 	}, 500);
 }
@@ -348,23 +375,93 @@ function chaoshex_octarine_action() {
 	chaoshex_terminal_print("");
 	setTimeout(function () {
 		chaoshex_terminal_print("Octarine Spell Template: 'Magically Empower [X]'");
-		chaoshex_terminal_print("Choose [X]: ");
+		//chaoshex_terminal_print("Choose [X]: ");
+		chaoshex_change_prompt("Choose [X]: ");
 		chaoshex_btn_display('octarine');
 	}, 500);
 }
 
 function chaoshex_octarine_spell(target_x) {
 	chaoshex_terminal_print("Magically Empower "+target_x);
+	chaoshex_change_prompt("");
 	chaoshex_btn_display('dgsgdsg');
 }
 
 
 function chaoshex_octarine_cancel_btn_pressed() {
 	console.log("cast cancel function reached.");
-	chaoshex_terminal_print("-]&gt;|&lt;[- : cancel");
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
 		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
+		chaoshex_btn_display('cast');
+	}, 500);
+}
+
+function chaoshex_sex_btn_pressed() {
+	$("#chaoshex_text_input").val("sex");
+	chaoshex_enter_btn_pressed();
+}
+
+function chaoshex_sex_action() {
+	console.log("cast sex spell function reached.");
+	chaoshex_terminal_print("Casting a Purple spell");
+	chaoshex_terminal_print("");
+	setTimeout(function () {
+		chaoshex_terminal_print("Purple Spell Template: '[X] will be created'");
+		//chaoshex_terminal_print("Choose [X]: ");
+		chaoshex_change_prompt("Choose [X]: ");
+		chaoshex_btn_display('sex');
+	}, 500);
+}
+
+function chaoshex_sex_spell(target_x) {
+	chaoshex_terminal_print(target_x+" will be created");
+	chaoshex_change_prompt("");
+	chaoshex_btn_display('dgsgdsg');
+}
+
+function chaoshex_sex_cancel_btn_pressed() {
+	console.log("cast cancel function reached.");
+	chaoshex_terminal_print("Spell cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
+		chaoshex_btn_display('cast');
+	}, 500);
+}
+
+
+function chaoshex_death_btn_pressed() {
+	$("#chaoshex_text_input").val("death");
+	chaoshex_enter_btn_pressed();
+}
+
+function chaoshex_death_action() {
+	console.log("cast sex spell function reached.");
+	chaoshex_terminal_print("Casting a Black spell");
+	chaoshex_terminal_print("");
+	setTimeout(function () {
+		chaoshex_terminal_print("Black Spell Template: '[X] will come to an end'");
+		//chaoshex_terminal_print("Choose [X]: ");
+		chaoshex_change_prompt("Choose [X]: ");
+		chaoshex_btn_display('death');
+	}, 500);
+}
+
+function chaoshex_death_spell(target_x) {
+	chaoshex_terminal_print(target_x+" will come to an end");
+	chaoshex_change_prompt("");
+	chaoshex_btn_display('dgsgdsg');
+}
+
+
+function chaoshex_death_cancel_btn_pressed() {
+	console.log("cast cancel function reached.");
+	chaoshex_terminal_print("Spell cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
 		chaoshex_btn_display('cast');
 	}, 500);
 }
@@ -378,6 +475,7 @@ function chaoshex_scry_btn_pressed() {
 	setTimeout(function () {
 		chaoshex_terminal_print("Select option: ");
 		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
 		chaoshex_btn_display("scry");
 	}, 500);
 }
@@ -388,6 +486,7 @@ function chaoshex_scry_cancel_btn_pressed() {
 	chaoshex_terminal_print("Divination cancelled");
 	setTimeout(function () {
 		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
 		chaoshex_btn_display('menu1');
 	}, 500);
 }
@@ -401,6 +500,7 @@ function chaoshex_summon_btn_pressed() {
 	setTimeout(function () {
 		chaoshex_terminal_print("Select option: ");
 		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
 		chaoshex_btn_display('summon');
 	}, 500);
 }
@@ -411,6 +511,7 @@ function chaoshex_summon_cancel_btn_pressed() {
 	chaoshex_terminal_print("Evocation cancelled");
 	setTimeout(function () {
 		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
 		chaoshex_btn_display('menu1');
 	}, 500);
 }
@@ -450,6 +551,14 @@ function chaoshex_void_mode_error() {
 }
 
 /* Terminal Handling Functions */
+function chaoshex_change_prompt(prompt) {
+	// Add str to terminal
+	if(prompt == '') { prompt ='-[&gt;|&lt;]- :' }
+
+	chaoshex_prompt = prompt;
+	$("#chaoshex_prompt").html(prompt);
+	$("#chaoshex_input_prompt").html(prompt);
+}
 function chaoshex_terminal_type(html) {
 	// Add str to terminal
 	if(html == '') { html = "&nbsp;"}
