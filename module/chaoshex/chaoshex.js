@@ -316,22 +316,16 @@ function chaoshex_enterYN_btn_pressed() {
 
 	if(confirm_yn.charAt(0) == 'Y' || confirm_yn.charAt(0) == 'y') {
 		// Launch spell routines.
+		chaoshex_terminal_print("Hacking into reality...");
+		chaoshex_btn_display('main1');
 	} else {
-
 		chaoshex_terminal_print("");
 		chaoshex_terminal_print("Spell cancelled");
 		chaoshex_terminal_print("");
 		chaoshex_enter_display('');
 		chaoshex_change_prompt("");
+		chaoshex_btn_display('main1');
 	}
-
-
-	chaoshex_spell_template = chaoshex_spell_template.replace("[Y]", chaoshex_spell_target_y);
-	chaoshex_terminal_print(chaoshex_spell_template);
-
-	chaoshex_statement_of_intent = chaoshex_spell_template;
-	chaoshex_enter_display('');
-	chaoshex_change_prompt("");
 }
 
 function chaoshex_login_btn_pressed() {
