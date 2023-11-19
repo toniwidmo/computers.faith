@@ -317,14 +317,14 @@ function chaoshex_enterYN_btn_pressed() {
 	if(confirm_yn.charAt(0) == 'Y' || confirm_yn.charAt(0) == 'y') {
 		// Launch spell routines.
 		chaoshex_terminal_print("Hacking into reality...");
-		chaoshex_btn_display('main1');
+		chaoshex_btn_display('menu1');
 	} else {
 		chaoshex_terminal_print("");
 		chaoshex_terminal_print("Spell cancelled");
 		chaoshex_terminal_print("");
 		chaoshex_enter_display('');
 		chaoshex_change_prompt("");
-		chaoshex_btn_display('main1');
+		chaoshex_btn_display('menu1');
 	}
 }
 
