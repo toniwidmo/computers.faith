@@ -14,6 +14,7 @@ var chaoshex_enigmagick_matches;
 
 // Spell Settings
 var chaoshex_spell_mode;
+var chaoshex_spell_template;
 var chaoshex_spell_target_x;
 var chaoshex_spell_target_y;
 var chaoshex_statement_of_intent;
@@ -47,6 +48,9 @@ function chaoshex_display(content) {
 	// Now add click methods to the buttons.
 	// Enter Button
 	$('#chaoshex_enter_btn').click(function(){ chaoshex_enter_btn_pressed(); });
+	$('#chaoshex_enterX_btn').click(function(){ chaoshex_enterX_btn_pressed(); });
+	$('#chaoshex_enterY_btn').click(function(){ chaoshex_enterY_btn_pressed(); });
+	$('#chaoshex_enterYN_btn').click(function(){ chaoshex_enterYN_btn_pressed(); });
 
 	// Login Menu options...
 	$('#chaoshex_login_btn').click(function(){ chaoshex_login_btn_pressed(); });
@@ -78,6 +82,10 @@ function chaoshex_display(content) {
 	// Summon Menu options...
 	$('#chaoshex_summon_cancel_btn').click(function(){ chaoshex_summon_cancel_btn_pressed(); });
 	$('#chaoshex_summon_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
+
+	// Confirm Menu options
+	$('#chaoshex_summon_yes_btn').click(function(){ chaoshex_confirm_yes_btn_pressed(); });
+	$('#chaoshex_summon_no_btn').click(function(){ chaoshex_confirm_no_btn_pressed(); });
 }
 
 function chaoshex_permlink(permlink) {
@@ -91,6 +99,11 @@ function chaoshex_btn_display(mode) {
 	chaoshex_text_callback_mode = mode;
 	$("#chaoshex_context_buttons input").hide();
 	$(".chaoshex_btn_"+mode).show();
+}
+function chaoshex_enter_display(mode) {
+	console.log("chaoshex_enter_display("+mode+")");
+	$(".chaoshex_enter_btn").hide();
+	$("#chaoshex_enter"+mode+"_btn").show();
 }
 
 /* Button Press Functions */
@@ -251,6 +264,76 @@ function chaoshex_enter_btn_pressed() {
 	return false;
 }
 
+function chaoshex_enterX_btn_pressed() {
+	chaoshex_spell_target_x = $("#chaoshex_text_input").val();
+	$("#chaoshex_text_input").val("");
+	chaoshex_terminal_print(chaoshex_prompt+" "+chaoshex_spell_target_x);
+	chaoshex_spell_template = chaoshex_spell_template.replace("[X]", chaoshex_spell_target_x);
+	chaoshex_terminal_print(chaoshex_spell_template);
+
+	if(chaoshex_spell_template.search('[Y]') != -1) {
+		chaoshex_enter_display('Y');
+		chaoshex_change_prompt("Choose [Y]: ");
+	} else {
+		chaoshex_statement_of_intent = chaoshex_spell_template;
+		chaoshex_confirm_spell();
+	}
+}
+
+function chaoshex_enterY_btn_pressed() {
+	chaoshex_spell_target_y = $("#chaoshex_text_input").val();
+	$("#chaoshex_text_input").val("");
+	chaoshex_terminal_print(chaoshex_prompt+" "+chaoshex_spell_target_y);
+	chaoshex_spell_template = chaoshex_spell_template.replace("[Y]", chaoshex_spell_target_y);
+	chaoshex_terminal_print(chaoshex_spell_template);
+
+	chaoshex_statement_of_intent = chaoshex_spell_template;
+	chaoshex_confirm_spell();
+}
+
+function chaoshex_confirm_spell() {
+	chaoshex_terminal_print("");
+	chaoshex_terminal_print("Warning. Reality will be permanently altered. Continue? [Yes/No]");
+	chaoshex_terminal_print("");
+	chaoshex_enter_display('YN');
+	chaoshex_btn_display('confirm');
+	chaoshex_change_prompt("Confirm [Y/N]");
+}
+
+function chaoshex_confirm_yes_btn_pressed() {
+	$("#chaoshex_text_input").val("Y");
+	chaoshex_enterYN_btn_pressed();
+}
+function chaoshex_confirm_yes_btn_pressed() {
+	$("#chaoshex_text_input").val("N");
+	chaoshex_enterYN_btn_pressed();
+}
+
+function chaoshex_enterYN_btn_pressed() {
+	confirm_yn = $("#chaoshex_text_input").val();
+	$("#chaoshex_text_input").val("");
+	chaoshex_terminal_print(chaoshex_prompt+" "+confirm_yn);
+
+	if(confirm_yn.charAt(0) == 'Y' || confirm_yn.charAt(0) == 'y') {
+		// Launch spell routines.
+	} else {
+
+		chaoshex_terminal_print("");
+		chaoshex_terminal_print("Spell cancelled");
+		chaoshex_terminal_print("");
+		chaoshex_enter_display('');
+		chaoshex_change_prompt("");
+	}
+
+
+	chaoshex_spell_template = chaoshex_spell_template.replace("[Y]", chaoshex_spell_target_y);
+	chaoshex_terminal_print(chaoshex_spell_template);
+
+	chaoshex_statement_of_intent = chaoshex_spell_template;
+	chaoshex_enter_display('');
+	chaoshex_change_prompt("");
+}
+
 function chaoshex_login_btn_pressed() {
 	$("#chaoshex_text_input").val("login");
 	chaoshex_enter_btn_pressed();
@@ -374,19 +457,13 @@ function chaoshex_octarine_action() {
 	chaoshex_terminal_print("Casting an Octarine spell");
 	chaoshex_terminal_print("");
 	setTimeout(function () {
-		chaoshex_terminal_print("Octarine Spell Template: 'Magically Empower [X]'");
-		//chaoshex_terminal_print("Choose [X]: ");
+		chaoshex_spell_template = "Magically Empower [X]";
+		chaoshex_terminal_print("Octarine Spell Template: '"+chaoshex_spell_template+"'");
+		chaoshex_enter_display('X');
 		chaoshex_change_prompt("Choose [X]: ");
-		chaoshex_btn_display('octarine');
+		//chaoshex_btn_display('octarine');
 	}, 500);
 }
-
-function chaoshex_octarine_spell(target_x) {
-	chaoshex_terminal_print("Magically Empower "+target_x);
-	chaoshex_change_prompt("");
-	chaoshex_btn_display('dgsgdsg');
-}
-
 
 function chaoshex_octarine_cancel_btn_pressed() {
 	console.log("cast cancel function reached.");
@@ -398,31 +475,118 @@ function chaoshex_octarine_cancel_btn_pressed() {
 	}, 500);
 }
 
-function chaoshex_sex_btn_pressed() {
-	$("#chaoshex_text_input").val("sex");
+
+function chaoshex_psyche_btn_pressed() {
+	$("#chaoshex_text_input").val("psyche");
 	chaoshex_enter_btn_pressed();
 }
 
-function chaoshex_sex_action() {
-	console.log("cast sex spell function reached.");
-	chaoshex_terminal_print("Casting a Purple spell");
+function chaoshex_psyche_action() {
+	console.log("cast psyche spell function reached.");
+	chaoshex_terminal_print("Casting a White spell");
 	chaoshex_terminal_print("");
 	setTimeout(function () {
-		chaoshex_terminal_print("Purple Spell Template: '[X] will be created'");
+		chaoshex_spell_template = "Psyche of [X] will [Y]";
+		chaoshex_terminal_print("White Spell Template: '"+chaoshex_spell_template+"'");
 		//chaoshex_terminal_print("Choose [X]: ");
+		chaoshex_enter_display('X');
 		chaoshex_change_prompt("Choose [X]: ");
-		chaoshex_btn_display('sex');
+		//chaoshex_btn_display('death');
 	}, 500);
 }
 
-function chaoshex_sex_spell(target_x) {
-	chaoshex_terminal_print(target_x+" will be created");
-	chaoshex_change_prompt("");
-	chaoshex_btn_display('dgsgdsg');
+function chaoshex_psyche_cancel_btn_pressed() {
+	console.log("cast psyche cancel function reached.");
+	chaoshex_terminal_print("Spell cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
+		chaoshex_btn_display('cast');
+	}, 500);
 }
 
-function chaoshex_sex_cancel_btn_pressed() {
-	console.log("cast cancel function reached.");
+
+function chaoshex_ego_btn_pressed() {
+	$("#chaoshex_text_input").val("ego");
+	chaoshex_enter_btn_pressed();
+}
+
+function chaoshex_ego_action() {
+	console.log("cast ego spell function reached.");
+	chaoshex_terminal_print("Casting a Yellow spell");
+	chaoshex_terminal_print("");
+	setTimeout(function () {
+		chaoshex_spell_template = "[X] will gain glamour of [Y]";
+		chaoshex_terminal_print("Yellow Spell Template: '"+chaoshex_spell_template+"'");
+		//chaoshex_terminal_print("Choose [X]: ");
+		chaoshex_enter_display('X');
+		chaoshex_change_prompt("Choose [X]: ");
+		//chaoshex_btn_display('death');
+	}, 500);
+}
+
+function chaoshex_ego_cancel_btn_pressed() {
+	console.log("cast ego cancel function reached.");
+	chaoshex_terminal_print("Spell cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
+		chaoshex_btn_display('cast');
+	}, 500);
+}
+
+
+function chaoshex_play_btn_pressed() {
+	$("#chaoshex_text_input").val("play");
+	chaoshex_enter_btn_pressed();
+}
+
+function chaoshex_play_action() {
+	console.log("cast play spell function reached.");
+	chaoshex_terminal_print("Casting a Blue spell");
+	chaoshex_terminal_print("");
+	setTimeout(function () {
+		chaoshex_spell_template = "[X] will get pleasure from [Y]";
+		chaoshex_terminal_print("Blue Spell Template: '"+chaoshex_spell_template+"'");
+		//chaoshex_terminal_print("Choose [X]: ");
+		chaoshex_enter_display('X');
+		chaoshex_change_prompt("Choose [X]: ");
+		//chaoshex_btn_display('death');
+	}, 500);
+}
+
+function chaoshex_play_cancel_btn_pressed() {
+	console.log("cast play cancel function reached.");
+	chaoshex_terminal_print("Spell cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
+		chaoshex_btn_display('cast');
+	}, 500);
+}
+
+
+function chaoshex_work_btn_pressed() {
+	$("#chaoshex_text_input").val("work");
+	chaoshex_enter_btn_pressed();
+}
+
+function chaoshex_work_action() {
+	console.log("cast work spell function reached.");
+	chaoshex_terminal_print("Casting an Orange spell");
+	chaoshex_terminal_print("");
+	setTimeout(function () {
+		chaoshex_spell_template = "[X] will succeed at [Y]";
+		chaoshex_terminal_print("Orange Spell Template: '"+chaoshex_spell_template+"'");
+		//chaoshex_terminal_print("Choose [X]: ");
+		chaoshex_enter_display('X');
+		chaoshex_change_prompt("Choose [X]: ");
+		//chaoshex_btn_display('death');
+	}, 500);
+}
+
+function chaoshex_work_cancel_btn_pressed() {
+	console.log("cast work cancel function reached.");
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
 		chaoshex_terminal_print("");
@@ -442,22 +606,107 @@ function chaoshex_death_action() {
 	chaoshex_terminal_print("Casting a Black spell");
 	chaoshex_terminal_print("");
 	setTimeout(function () {
-		chaoshex_terminal_print("Black Spell Template: '[X] will come to an end'");
+		chaoshex_spell_template = "[X] will come to an end";
+		chaoshex_terminal_print("Black Spell Template: '"+chaoshex_spell_template+"'");
 		//chaoshex_terminal_print("Choose [X]: ");
+		chaoshex_enter_display('X');
 		chaoshex_change_prompt("Choose [X]: ");
-		chaoshex_btn_display('death');
+		//chaoshex_btn_display('death');
 	}, 500);
 }
 
-function chaoshex_death_spell(target_x) {
-	chaoshex_terminal_print(target_x+" will come to an end");
-	chaoshex_change_prompt("");
-	chaoshex_btn_display('dgsgdsg');
+function chaoshex_death_cancel_btn_pressed() {
+	console.log("cast cancel function reached.");
+	chaoshex_terminal_print("Spell cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
+		chaoshex_btn_display('cast');
+	}, 500);
 }
 
 
-function chaoshex_death_cancel_btn_pressed() {
+function chaoshex_sex_btn_pressed() {
+	$("#chaoshex_text_input").val("sex");
+	chaoshex_enter_btn_pressed();
+}
+
+function chaoshex_sex_action() {
+	console.log("cast sex spell function reached.");
+	chaoshex_terminal_print("Casting a Purple spell");
+	chaoshex_terminal_print("");
+	setTimeout(function () {
+		chaoshex_spell_template = "[X] will be created";
+		chaoshex_terminal_print("Purple Spell Template: '"+chaoshex_spell_template+"'");
+		//chaoshex_terminal_print("Choose [X]: ");
+		chaoshex_enter_display('X');
+		chaoshex_change_prompt("Choose [X]: ");
+		//chaoshex_btn_display('sex');
+	}, 500);
+}
+
+function chaoshex_sex_cancel_btn_pressed() {
 	console.log("cast cancel function reached.");
+	chaoshex_terminal_print("Spell cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
+		chaoshex_btn_display('cast');
+	}, 500);
+}
+
+
+function chaoshex_war_btn_pressed() {
+	$("#chaoshex_text_input").val("war");
+	chaoshex_enter_btn_pressed();
+}
+
+function chaoshex_war_action() {
+	console.log("cast war spell function reached.");
+	chaoshex_terminal_print("Casting a red spell");
+	chaoshex_terminal_print("");
+	setTimeout(function () {
+		chaoshex_spell_template = "[X] will take over [Y]";
+		chaoshex_terminal_print("Red Spell Template: '"+chaoshex_spell_template+"'");
+		//chaoshex_terminal_print("Choose [X]: ");
+		chaoshex_enter_display('X');
+		chaoshex_change_prompt("Choose [X]: ");
+		//chaoshex_btn_display('death');
+	}, 500);
+}
+
+function chaoshex_war_cancel_btn_pressed() {
+	console.log("cast war cancel function reached.");
+	chaoshex_terminal_print("Spell cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
+		chaoshex_btn_display('cast');
+	}, 500);
+}
+
+
+function chaoshex_love_btn_pressed() {
+	$("#chaoshex_text_input").val("love");
+	chaoshex_enter_btn_pressed();
+}
+
+function chaoshex_love_action() {
+	console.log("cast love spell function reached.");
+	chaoshex_terminal_print("Casting a Green spell");
+	chaoshex_terminal_print("");
+	setTimeout(function () {
+		chaoshex_spell_template = "[X] will attract [Y]";
+		chaoshex_terminal_print("Green Spell Template: '"+chaoshex_spell_template+"'");
+		//chaoshex_terminal_print("Choose [X]: ");
+		chaoshex_enter_display('X');
+		chaoshex_change_prompt("Choose [X]: ");
+		//chaoshex_btn_display('death');
+	}, 500);
+}
+
+function chaoshex_love_cancel_btn_pressed() {
+	console.log("cast love cancel function reached.");
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
 		chaoshex_terminal_print("");
