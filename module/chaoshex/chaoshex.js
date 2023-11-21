@@ -142,7 +142,7 @@ function chaoshex_rectangle_hack() {
 	var rand_col = Math.floor(Math.random() * (5));
 	var colour = colours[rand_col];
 
-	var rect = "<div class='chaoshex_hack' style='background: "+colour+"; position: absolute; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; height: "+height+"%; animation: fading 5s;'></div>";
+	var rect = "<div class='chaoshex_hack' style='background: "+colour+"; position: fixed; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; height: "+height+"%; animation: fading 5s;'></div>";
 	$("#chaoshex_terminal").append(rect);
 }
 
