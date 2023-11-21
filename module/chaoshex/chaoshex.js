@@ -20,6 +20,7 @@ var chaoshex_spell_target_y;
 var chaoshex_statement_of_intent;
 var chaoshex_statement_of_intent_value;
 var chaoshex_statement_of_intent_matches;
+var chaoshex_hacks;
 
 
 /* A content module for a web based version of the ChaosHex software */
@@ -84,13 +85,69 @@ function chaoshex_display(content) {
 	$('#chaoshex_summon_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
 
 	// Confirm Menu options
-	$('#chaoshex_summon_yes_btn').click(function(){ chaoshex_confirm_yes_btn_pressed(); });
-	$('#chaoshex_summon_no_btn').click(function(){ chaoshex_confirm_no_btn_pressed(); });
+	$('#chaoshex_confirm_yes_btn').click(function(){ chaoshex_confirm_yes_btn_pressed(); });
+	$('#chaoshex_confirm_no_btn').click(function(){ chaoshex_confirm_no_btn_pressed(); });
 }
 
 function chaoshex_permlink(permlink) {
 	permlink = permlink.join("/");
 	chaoshex_load(permlink);
+}
+
+/* Reality Hacking Visualisation Functions */
+function chaoshex_hack_reality() {
+	console.log("chaoshex_hack_reality()");
+	// Reality Hacking Visualisation
+	$("#chaoshex_context_buttons input").hide();
+	$(".chaoshex_enter_btn").hide();
+
+	chaoshex_random_hack(500);
+}
+	 
+function chaoshex_hack_reality_complete() {
+	$('.chaoshex_hack').animate({
+		opacity: 0
+	}, 200);
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_terminal_print("Reality Permanently Altered");
+		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
+		chaoshex_btn_display('menu1');
+	}, 300);
+}
+
+function chaoshex_random_hack(hacks) {
+	console.log("chaoshex_random_hack()");
+
+	//TO DO: Add other kinds of random hacks, not just rectangles.
+	//var rnum = Math.floor(Math.random() * 23);
+	//if(rnum == 5) chaoshex_terminal_print(".");
+	//else chaoshex_terminal_type(".");
+	chaoshex_rectangle_hack();
+
+	if(hacks > 0) { 
+		setTimeout(function () {
+			chaoshex_random_hack(hacks - 1);
+		}, 100);
+	} else chaoshex_hack_reality_complete();
+}
+
+function chaoshex_rectangle_hack() {
+	var colours = ["#f00","#0f0","#00f","#ff0","#f0f","#0ff"];
+	var xcoord = Math.floor(Math.random() * 95);
+	var ycoord = Math.floor(Math.random() * 95);
+	var width = Math.floor(Math.random() * (100-xcoord));
+	var height = Math.floor(Math.random() * (100-ycoord));
+	var rand_col = Math.floor(Math.random() * (5));
+	var colour = colours[rand_col];
+
+	var rect = "<div class='chaoshex_hack' style='background: "+colour+"; position: absolute; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; height: "+height+"%; animation: fading 5s;'></div>";
+	$("#chaoshex_terminal").append(rect);
+}
+
+function chaoshex_text_hack() {
+	var text = ["#f00","#0f0","#00f","#ff0","#f0f","#0ff"];
 }
 
 /* Button Mode Functions */
@@ -304,10 +361,11 @@ function chaoshex_confirm_yes_btn_pressed() {
 	$("#chaoshex_text_input").val("Y");
 	chaoshex_enterYN_btn_pressed();
 }
-function chaoshex_confirm_yes_btn_pressed() {
+function chaoshex_confirm_no_btn_pressed() {
 	$("#chaoshex_text_input").val("N");
 	chaoshex_enterYN_btn_pressed();
 }
+
 
 function chaoshex_enterYN_btn_pressed() {
 	confirm_yn = $("#chaoshex_text_input").val();
@@ -318,6 +376,7 @@ function chaoshex_enterYN_btn_pressed() {
 		// Launch spell routines.
 		chaoshex_terminal_print("Hacking into reality...");
 		chaoshex_btn_display('menu1');
+		chaoshex_hack_reality();
 	} else {
 		chaoshex_terminal_print("");
 		chaoshex_terminal_print("Spell cancelled");
@@ -810,7 +869,7 @@ console.log(line);
 	$(".chaoshex_cls").last().append(line);
 	$('#chaoshex_terminal').animate({
 		scrollTop: $("#chaoshex_terminal").prop("scrollHeight")
-	}, 200);
+	}, 10);
 }
 function chaoshex_terminal_print(html) {
 	// Add str to terminal
