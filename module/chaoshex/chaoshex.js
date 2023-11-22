@@ -11,6 +11,8 @@ var chaoshex_enigmagick_api_enabled = false;
 var chaoshex_enigmagick_api;
 var chaoshex_enigmagick_texts;
 var chaoshex_enigmagick_ciphers;
+var chaoshex_enigmagick_text;
+var chaoshex_enigmagick_cipher;
 var chaoshex_enigmagick_matches;
 var chaoshex_enigmagick_value;
 
@@ -64,6 +66,9 @@ function chaoshex_display(content) {
 	$('#chaoshex_enterX_btn').click(function(){ chaoshex_enterX_btn_pressed(); });
 	$('#chaoshex_enterY_btn').click(function(){ chaoshex_enterY_btn_pressed(); });
 	$('#chaoshex_enterYN_btn').click(function(){ chaoshex_enterYN_btn_pressed(); });
+	$('#chaoshex_enterCipher_btn').click(function(){ chaoshex_enterCipher_btn_pressed(); });
+	$('#chaoshex_enterText_btn').click(function(){ chaoshex_enterText_btn_pressed(); });
+	$('#chaoshex_enterSearch_btn').click(function(){ chaoshex_enterSearch_btn_pressed(); });
 
 	// Login Menu options...
 	$('#chaoshex_login_btn').click(function(){ chaoshex_login_btn_pressed(); });
@@ -89,6 +94,7 @@ function chaoshex_display(content) {
 	$('#chaoshex_cast_love_btn').click(function(){ chaoshex_love_btn_pressed(); });
 
 	// Scry Menu options...
+	$('#chaoshex_cast_gematria_btn').click(function(){ chaoshex_gematria_btn_pressed(); });
 	$('#chaoshex_scry_cancel_btn').click(function(){ chaoshex_scry_cancel_btn_pressed(); });
 	$('#chaoshex_scry_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
 
@@ -242,6 +248,16 @@ function chaoshex_getMatches(search,cipher,text) {
 function chaoshex_processMatches(matches) {
 	chaoshex_enigmagick_matches = matches.matches;
 	chaoshex_enigmagick_value = matches.value;
+
+	if(chaoshex_text_callback_mode == "scry") {
+		// Display results
+		chaoshex_terminal_print("Value : "+matches.value);
+		for(i=0; i < matches.matches.length; i++) {
+			chaoshex_terminal_print((i+1)+") "+matches.matches[i]);
+		}
+		chaoshex_enter_display("");
+		chaoshex_change_prompt("");
+	}
 }
 
 /* Button Mode Functions */
@@ -348,36 +364,89 @@ function chaoshex_enter_btn_pressed() {
 			}
 			break;
 		case 'psyche':
-			chaoshex_psyche_action();
-			return true;
+			if(chaoshex_text_callback_mode == 'cast') {
+				chaoshex_psyche_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
 			break;
 		case 'ego':
-			chaoshex_ego_action();
-			return true;
+			if(chaoshex_text_callback_mode == 'cast') {
+				chaoshex_ego_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
 			break;
 		case 'play':
-			chaoshex_play_action();
-			return true;
+			if(chaoshex_text_callback_mode == 'cast') {
+				chaoshex_play_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
 			break;
 		case 'work':
-			chaoshex_work_action();
-			return true;
+			if(chaoshex_text_callback_mode == 'cast') {
+				chaoshex_work_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
 			break;
 		case 'death':
-			chaoshex_death_action();
-			return true;
+			if(chaoshex_text_callback_mode == 'cast') {
+				chaoshex_death_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
 			break;
 		case 'sex':
-			chaoshex_sex_action();
-			return true;
+			if(chaoshex_text_callback_mode == 'cast') {
+				chaoshex_sex_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
 			break;
 		case 'war':
-			chaoshex_war_action();
-			return true;
+			if(chaoshex_text_callback_mode == 'cast') {
+				chaoshex_war_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
 			break;
 		case 'love':
-			chaoshex_love_action();
+			if(chaoshex_text_callback_mode == 'cast') {
+				chaoshex_love_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
+			break;
+		case 'scry':
+			chaoshex_scry_action();
 			return true;
+			break;
+		case 'gematria':
+			if(chaoshex_text_callback_mode == 'scry') {
+				chaoshex_gematria_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
 			break;
 		default:
 			switch(chaoshex_text_callback_mode) {
@@ -889,6 +958,11 @@ function chaoshex_love_cancel_btn_pressed() {
 
 // Scry button and scry menu buttons
 function chaoshex_scry_btn_pressed() {
+	$("#chaoshex_text_input").val("scry");
+	chaoshex_enter_btn_pressed();
+}
+
+function chaoshex_scry_action() {
 	console.log("scry function reached.");
 	chaoshex_terminal_print("-]&gt;|&lt;[- : scry");
 	chaoshex_terminal_print("Divination with ChaosHex");
@@ -912,10 +986,110 @@ function chaoshex_scry_cancel_btn_pressed() {
 	}, 500);
 }
 
+function chaoshex_gematria_btn_pressed() {
+	console.log("gematria btn function reached.");
+	$("#chaoshex_text_input").val("gematria");
+	chaoshex_enter_btn_pressed();
+}
+
+function chaoshex_gematria_action() {
+	console.log("gematria action function reached.");
+	chaoshex_terminal_print("Gematria with ChaosHex");
+
+	if(chaoshex_enigmagick_api_enabled) {
+		chaoshex_terminal_print("Accessing EnigMagick");
+		chaoshex_terminal_print("");
+
+		setTimeout(function () {
+			chaoshex_terminal_print("Select cipher: ");
+			chaoshex_terminal_print("");
+			for(i=0; i < chaoshex_enigmagick_ciphers.ciphers.length; i++) {
+				chaoshex_terminal_print(i+") "+chaoshex_enigmagick_ciphers.ciphers[i].name);
+			}
+			chaoshex_change_prompt("Cipher: ");
+			chaoshex_enter_display("Cipher");
+		}, 500);
+	} else {
+		chaoshex_terminal_print("EnigMagick Unavailable.");
+		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
+	}
+
+}
+function chaoshex_enterCipher_btn_pressed() {
+	console.log("enter cipher function reached.");
+
+	let cmd = $("#chaoshex_text_input").val();
+	chaoshex_terminal_print(chaoshex_prompt+" "+cmd);
+
+	index = parseInt(cmd,10);
+	if(typeof chaoshex_enigmagick_ciphers.ciphers[index] === 'undefined') {
+		chaoshex_terminal_print("Invalid cipher. Selecting default...");
+		chaoshex_enigmagick_cipher = chaoshex_enigmagick_ciphers.ciphers[0];
+	}
+	else {
+		chaoshex_enigmagick_cipher = chaoshex_enigmagick_ciphers.ciphers[index];
+	}
+
+	chaoshex_terminal_print("Cipher selected: "+chaoshex_enigmagick_cipher.name);
+	chaoshex_terminal_print("");
+
+	setTimeout(function () {
+		chaoshex_terminal_print("Select text: ");
+		chaoshex_terminal_print("");
+		for(i=0; i < chaoshex_enigmagick_texts.texts.length; i++) {
+			chaoshex_terminal_print(i+") "+chaoshex_enigmagick_texts.texts[i].title);
+		}
+		chaoshex_change_prompt("Text: ");
+		chaoshex_enter_display("Text");
+	}, 500);
+}
+function chaoshex_enterText_btn_pressed() {
+	console.log("enter text function reached.");
+
+	let cmd = $("#chaoshex_text_input").val();
+	chaoshex_terminal_print(chaoshex_prompt+" "+cmd);
+
+	index = parseInt(cmd,10);
+	if(typeof chaoshex_enigmagick_texts.texts[index] === 'undefined') {
+		chaoshex_terminal_print("Invalid cipher. Selecting default...");
+		chaoshex_enigmagick_text = chaoshex_enigmagick_texts.texts[0];
+	}
+	else {
+		chaoshex_enigmagick_text = chaoshex_enigmagick_texts.texts[index];
+	}
+
+	chaoshex_terminal_print("Text selected: "+chaoshex_enigmagick_text.title);
+	chaoshex_terminal_print("");
+
+	setTimeout(function () {
+		chaoshex_terminal_print("Enter string to evaluate: ");
+		chaoshex_terminal_print("");
+		
+		chaoshex_change_prompt("Search: ");
+		chaoshex_enter_display("Search");
+	}, 500);
+}
+function chaoshex_enterSearch_btn_pressed() {
+	console.log("enter search function reached.");
+
+	let cmd = $("#chaoshex_text_input").val();
+	chaoshex_terminal_print(chaoshex_prompt+" "+cmd);
+
+	chaoshex_change_prompt("Searching... ");
+	chaoshex_enter_display("Searching");
+
+	chaoshex_getMatches(cmd,chaoshex_enigmagick_cipher.short_name,chaoshex_enigmagick_text.file.slice(0, -4));
+}
+
 // Summon button and summon menu buttons
 function chaoshex_summon_btn_pressed() {
-	console.log("cast function reached.");
-	chaoshex_terminal_print("-]&gt;|&lt;[- : summon");
+	$("#chaoshex_text_input").val("summon");
+	chaoshex_enter_btn_pressed();
+}
+
+function chaoshex_summon_action() {
+	console.log("summon function reached.");
 	chaoshex_terminal_print("Evoke entity with ChaosHex");
 	chaoshex_terminal_print("");
 	setTimeout(function () {
