@@ -13,15 +13,27 @@
         background-color: #333; 
         padding: 0em 0.25em;
     }
-    #chaoshex_terminal, #chaoshex_text_input {
+    #chaoshex_terminal, #chaoshex_text_input, .chaoshex_hack_text_border {
         background: linear-gradient(to bottom, #333, #333 50%, #3a3a3a 50%, #3a3a3a); 
         background-size: 100% 4px;
+        color: #ffedcc; text-shadow: 0 0 3px #ffa500; text-shadow: 0 0 10px #ffa500;
+    }
+    .chaoshex_hack_text_border {
+        border: #ffedcc 1px solid;
+        border-radius: 5px;
+        white-space: pre-wrap; word-wrap: break-word; margin-top: 2px; margin-bottom: 0px;
+        overflow: hidden;
+    }
+    .chaoshex_hack_text {
+        white-space: pre-wrap; word-wrap: break-word;
+        overflow: hidden;
+        color: #ffedcc; text-shadow: 0 0 3px #ffa500; text-shadow: 0 0 10px #ffa500;
     }
     #chaoshex_cursor { content: "_"; font-weight: bold; animation: blinking 0.75s step-end infinite; }
     @keyframes blinking { from, to { visibility: hidden; } 50% { visibility: visible; } }
     @keyframes fading { 0% { opacity: 0; } 1% { opacity: 1; } 100% { opacity: 0; } }
-    #chaoshex_terminal p { color: #ffedcc; white-space: pre-wrap; word-wrap: break-word; margin-top: 2px; margin-bottom: 0px; }
-    #chaoshex_terminal p { text-shadow: 0 0 3px #ffa500; text-shadow: 0 0 10px #ffa500; }
+    #chaoshex_terminal p {  white-space: pre-wrap; word-wrap: break-word; margin-top: 2px; margin-bottom: 0px; --text-shadow: 0 0 10px #ffa500; }
+    #chaoshex_terminal p {  color: #ffedcc; text-shadow: 0 0 3px #ffa500; text-shadow: 0 0 10px #ffa500; }
 
     .chaoshex_octarine {
 	    animation: hue-rotate 1s infinite;

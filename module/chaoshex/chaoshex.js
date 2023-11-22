@@ -20,7 +20,7 @@ var chaoshex_spell_target_y;
 var chaoshex_statement_of_intent;
 var chaoshex_statement_of_intent_value;
 var chaoshex_statement_of_intent_matches;
-var chaoshex_hacks;
+var chaoshex_hacks = 666;
 
 
 /* A content module for a web based version of the ChaosHex software */
@@ -101,7 +101,7 @@ function chaoshex_hack_reality() {
 	$("#chaoshex_context_buttons input").hide();
 	$(".chaoshex_enter_btn").hide();
 
-	chaoshex_random_hack(500);
+	chaoshex_random_hack(chaoshex_hacks);
 }
 	 
 function chaoshex_hack_reality_complete() {
@@ -109,6 +109,7 @@ function chaoshex_hack_reality_complete() {
 		opacity: 0
 	}, 200);
 	setTimeout(function () {
+		$('.chaoshex_hack').remove(); // No longer needed.
 		chaoshex_terminal_print("");
 		chaoshex_terminal_print("Reality Permanently Altered");
 		chaoshex_terminal_print("");
@@ -121,11 +122,10 @@ function chaoshex_random_hack(hacks) {
 	console.log("chaoshex_random_hack()");
 
 	//TO DO: Add other kinds of random hacks, not just rectangles.
-	//var rnum = Math.floor(Math.random() * 23);
-	//if(rnum == 5) chaoshex_terminal_print(".");
-	//else chaoshex_terminal_type(".");
-	chaoshex_rectangle_hack();
-
+	var rnum = Math.floor(Math.random() * 23);
+	if(rnum < 5) chaoshex_rectangle_hack();
+	else chaoshex_text_hack(hacks);
+	
 	if(hacks > 0) { 
 		setTimeout(function () {
 			chaoshex_random_hack(hacks - 1);
@@ -139,15 +139,60 @@ function chaoshex_rectangle_hack() {
 	var ycoord = Math.floor(Math.random() * 95);
 	var width = Math.floor(Math.random() * (100-xcoord));
 	var height = Math.floor(Math.random() * (100-ycoord));
-	var rand_col = Math.floor(Math.random() * (5));
+	var rand_col = Math.floor(Math.random() * (6));
 	var colour = colours[rand_col];
 
 	var rect = "<div class='chaoshex_hack' style='background: "+colour+"; position: fixed; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; height: "+height+"%; animation: fading 5s;'></div>";
 	$("#chaoshex_terminal").append(rect);
 }
 
-function chaoshex_text_hack() {
-	var text = ["#f00","#0f0","#00f","#ff0","#f0f","#0ff"];
+function chaoshex_randomBinary(min, max) {
+	return Math.floor(min + Math.random() * (max + 1 - min)).toString(2).padStart(16,'0');
+}
+
+function chaoshex_text_hack(hacks) {
+	var texts = ["01","%","Access Denied. Rerouting.","Target Data Located","Poisoning Trace","Corrupting Logs","EnigMagickValue","EnigMagickMatch"];
+	var text = texts[Math.floor(Math.random() * 8)]
+	switch(text) {
+		case "01":
+			text = chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			text += chaoshex_randomBinary(0,65535);
+			break;
+		case "%":
+			percent = Math.floor(((chaoshex_hacks-hacks)/chaoshex_hacks)*100);
+			text = percent+"% of neccessary updates to reality complete";
+			break;
+	}
+
+	var xcoord = Math.floor(Math.random() * 95);
+	var ycoord = Math.floor(Math.random() * 95);
+	var size = Math.floor(Math.random() * 50)/10;
+
+	if(size > 2) {
+		var width = Math.floor(Math.random() * (100-xcoord));
+		var rect = "<div class='chaoshex_hack chaoshex_hack_text chaoshex_"+chaoshex_spell_mode+"' style='position: fixed; font-size:"+size+"em; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; animation: fading 6s;'>"+text+"</div>";
+	} else {
+		var width = Math.floor(Math.random() * (100-xcoord)/3)+5;
+		var height = Math.floor(Math.random() * (100-ycoord)/3)+5;
+		var rect = "<div class='chaoshex_hack chaoshex_hack_text_border chaoshex_"+chaoshex_spell_mode+"' style='position: fixed; font-size:"+size+"em; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; height: "+height+"%; animation: fading 5s;'>"+text+"</div>";
+	}
+	$("#chaoshex_terminal").append(rect);
 }
 
 /* Button Mode Functions */
@@ -349,6 +394,7 @@ function chaoshex_enterY_btn_pressed() {
 }
 
 function chaoshex_confirm_spell() {
+	chaoshex_spell_mode = chaoshex_text_callback_mode;
 	chaoshex_terminal_print("");
 	chaoshex_terminal_print("Warning. Reality will be permanently altered. Continue? [Yes/No]");
 	chaoshex_terminal_print("");
@@ -509,6 +555,7 @@ function chaoshex_octarine_action() {
 	console.log("cast octarine spell function reached.");
 	chaoshex_terminal_print("Casting an Octarine spell");
 	chaoshex_terminal_print("");
+	chaoshex_spell_mode = 'octarine';
 	setTimeout(function () {
 		chaoshex_spell_template = "Magically Empower [X]";
 		chaoshex_terminal_print("Octarine Spell Template: '"+chaoshex_spell_template+"'");
@@ -538,6 +585,7 @@ function chaoshex_psyche_action() {
 	console.log("cast psyche spell function reached.");
 	chaoshex_terminal_print("Casting a White spell");
 	chaoshex_terminal_print("");
+	chaoshex_spell_mode = 'psyche';
 	setTimeout(function () {
 		chaoshex_spell_template = "Psyche of [X] will [Y]";
 		chaoshex_terminal_print("White Spell Template: '"+chaoshex_spell_template+"'");
@@ -568,6 +616,7 @@ function chaoshex_ego_action() {
 	console.log("cast ego spell function reached.");
 	chaoshex_terminal_print("Casting a Yellow spell");
 	chaoshex_terminal_print("");
+	chaoshex_spell_mode = 'yellow';
 	setTimeout(function () {
 		chaoshex_spell_template = "[X] will gain glamour of [Y]";
 		chaoshex_terminal_print("Yellow Spell Template: '"+chaoshex_spell_template+"'");
@@ -598,6 +647,7 @@ function chaoshex_play_action() {
 	console.log("cast play spell function reached.");
 	chaoshex_terminal_print("Casting a Blue spell");
 	chaoshex_terminal_print("");
+	chaoshex_spell_mode = 'blue';
 	setTimeout(function () {
 		chaoshex_spell_template = "[X] will get pleasure from [Y]";
 		chaoshex_terminal_print("Blue Spell Template: '"+chaoshex_spell_template+"'");
@@ -628,6 +678,7 @@ function chaoshex_work_action() {
 	console.log("cast work spell function reached.");
 	chaoshex_terminal_print("Casting an Orange spell");
 	chaoshex_terminal_print("");
+	chaoshex_spell_mode = 'orange';
 	setTimeout(function () {
 		chaoshex_spell_template = "[X] will succeed at [Y]";
 		chaoshex_terminal_print("Orange Spell Template: '"+chaoshex_spell_template+"'");
@@ -658,6 +709,7 @@ function chaoshex_death_action() {
 	console.log("cast sex spell function reached.");
 	chaoshex_terminal_print("Casting a Black spell");
 	chaoshex_terminal_print("");
+	chaoshex_spell_mode = 'black';
 	setTimeout(function () {
 		chaoshex_spell_template = "[X] will come to an end";
 		chaoshex_terminal_print("Black Spell Template: '"+chaoshex_spell_template+"'");
@@ -688,6 +740,7 @@ function chaoshex_sex_action() {
 	console.log("cast sex spell function reached.");
 	chaoshex_terminal_print("Casting a Purple spell");
 	chaoshex_terminal_print("");
+	chaoshex_spell_mode = 'purple';
 	setTimeout(function () {
 		chaoshex_spell_template = "[X] will be created";
 		chaoshex_terminal_print("Purple Spell Template: '"+chaoshex_spell_template+"'");
@@ -718,6 +771,7 @@ function chaoshex_war_action() {
 	console.log("cast war spell function reached.");
 	chaoshex_terminal_print("Casting a red spell");
 	chaoshex_terminal_print("");
+	chaoshex_spell_mode = 'red';
 	setTimeout(function () {
 		chaoshex_spell_template = "[X] will take over [Y]";
 		chaoshex_terminal_print("Red Spell Template: '"+chaoshex_spell_template+"'");
@@ -748,6 +802,7 @@ function chaoshex_love_action() {
 	console.log("cast love spell function reached.");
 	chaoshex_terminal_print("Casting a Green spell");
 	chaoshex_terminal_print("");
+	chaoshex_spell_mode = 'green';
 	setTimeout(function () {
 		chaoshex_spell_template = "[X] will attract [Y]";
 		chaoshex_terminal_print("Green Spell Template: '"+chaoshex_spell_template+"'");
@@ -860,6 +915,7 @@ function chaoshex_change_prompt(prompt) {
 	chaoshex_prompt = prompt;
 	$("#chaoshex_prompt").html(prompt);
 	$("#chaoshex_input_prompt").html(prompt);
+	$("#chaoshex_text_input").trigger("focus");
 }
 function chaoshex_terminal_type(html) {
 	// Add str to terminal
