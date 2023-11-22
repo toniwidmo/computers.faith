@@ -8,9 +8,11 @@ var chaoshex_text_callback_mode = 'login';
 
 // EnigMagick API integration 
 var chaoshex_enigmagick_api_enabled = false;
+var chaoshex_enigmagick_api;
 var chaoshex_enigmagick_texts;
 var chaoshex_enigmagick_ciphers;
 var chaoshex_enigmagick_matches;
+var chaoshex_enigmagick_value;
 
 // Spell Settings
 var chaoshex_spell_mode;
@@ -18,8 +20,6 @@ var chaoshex_spell_template;
 var chaoshex_spell_target_x;
 var chaoshex_spell_target_y;
 var chaoshex_statement_of_intent;
-var chaoshex_statement_of_intent_value;
-var chaoshex_statement_of_intent_matches;
 var chaoshex_hacks = 666;
 
 
@@ -37,6 +37,18 @@ function chaoshex_load(args) {
 		}, 100);
 		return null;
 	}
+	if(typeof config.data_sources == "object") {
+		if(typeof config.data_sources.enigmagick == "object" && config.data_sources.enigmagick[0] == "enigmagick_api") {
+			chaoshex_enigmagick_api = config.data_sources.enigmagick[1];
+			chaoshex_enigmagick_api_enabled = true;
+			console.log( "enigmagick_api detected." );
+		} 
+	}
+	if(chaoshex_enigmagick_api_enabled) {
+		chaoshex_getCipherList();
+		chaoshex_getTextList();
+	} 
+
 	chaoshex_display();
 	pushStateWithoutDuplicate('ChaosHex3', './?p=chaoshex/');
 }
@@ -107,15 +119,16 @@ function chaoshex_hack_reality() {
 function chaoshex_hack_reality_complete() {
 	$('.chaoshex_hack').animate({
 		opacity: 0
-	}, 200);
+	}, 500);
 	setTimeout(function () {
 		$('.chaoshex_hack').remove(); // No longer needed.
 		chaoshex_terminal_print("");
-		chaoshex_terminal_print("Reality Permanently Altered");
+		chaoshex_terminal_print("100% of neccessary updates to reality complete.");
+		chaoshex_terminal_print("Reality permanently altered.");
 		chaoshex_terminal_print("");
 		chaoshex_change_prompt("");
 		chaoshex_btn_display('menu1');
-	}, 300);
+	}, 600);
 }
 
 function chaoshex_random_hack(hacks) {
@@ -152,37 +165,41 @@ function chaoshex_randomBinary(min, max) {
 
 function chaoshex_text_hack(hacks) {
 	var texts = ["01","%","Access Denied. Rerouting.","Target Data Located","Poisoning Trace","Corrupting Logs","EnigMagickValue","EnigMagickMatch"];
-	var text = texts[Math.floor(Math.random() * 8)]
+	var text = texts[Math.floor(Math.random() * 8)];
+
+	var xcoord = Math.floor(Math.random() * 95);
+	var ycoord = Math.floor(Math.random() * 95);
+	var size = Math.floor(Math.random() * 50)/10;
 	switch(text) {
 		case "01":
+			let binary_size = Math.floor(Math.random() * 32) + 16;
+
 			text = chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
-			text += chaoshex_randomBinary(0,65535);
+			for(i=0; i<binary_size; i++) {
+				text += chaoshex_randomBinary(0,65535);
+			}
 			break;
 		case "%":
 			percent = Math.floor(((chaoshex_hacks-hacks)/chaoshex_hacks)*100);
 			text = percent+"% of neccessary updates to reality complete";
 			break;
+		case "EnigMagickValue":
+			if(chaoshex_enigmagick_api_enabled) {
+				text = chaoshex_enigmagick_value;
+				size = size + 2;
+			} else {
+				text = "Value unobtainable";
+			}
+			break;
+		case "EnigMagickMatch":
+			if(chaoshex_enigmagick_api_enabled) {
+				// Select a random match to display...
+				text = chaoshex_enigmagick_matches[Math.floor(Math.random() * chaoshex_enigmagick_matches.length)];
+			} else {
+				text = "Hivemind fixing reality";
+			}
+			break;
 	}
-
-	var xcoord = Math.floor(Math.random() * 95);
-	var ycoord = Math.floor(Math.random() * 95);
-	var size = Math.floor(Math.random() * 50)/10;
 
 	if(size > 2) {
 		var width = Math.floor(Math.random() * (100-xcoord));
@@ -193,6 +210,38 @@ function chaoshex_text_hack(hacks) {
 		var rect = "<div class='chaoshex_hack chaoshex_hack_text_border chaoshex_"+chaoshex_spell_mode+"' style='position: fixed; font-size:"+size+"em; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; height: "+height+"%; animation: fading 5s;'>"+text+"</div>";
 	}
 	$("#chaoshex_terminal").append(rect);
+}
+
+/* EnigMagick Functions */
+
+function chaoshex_getCipherList() {
+	$.ajax({
+        type: 'GET',
+        url: chaoshex_enigmagick_api+"ciphers.php"
+    }).done(chaoshex_processCipherList);
+} 
+function chaoshex_processCipherList(ciphers) {
+	chaoshex_enigmagick_ciphers = ciphers;
+}
+function chaoshex_getTextList() {
+	$.ajax({
+        type: 'GET',
+        url: chaoshex_enigmagick_api+"texts.php"
+    }).done(chaoshex_processTextList);
+} 
+function chaoshex_processTextList(texts) {
+	chaoshex_enigmagick_texts = texts;
+}
+function chaoshex_getMatches(search,cipher,text) {
+	chaoshex_enigmagick_matches = null;
+	$.ajax({
+        type: 'GET',
+        url: chaoshex_enigmagick_api+"matches.php?search="+search+"&cipher="+cipher+"&text="+text+".txt"
+    }).done(chaoshex_processMatches);
+} 
+function chaoshex_processMatches(matches) {
+	chaoshex_enigmagick_matches = matches.matches;
+	chaoshex_enigmagick_value = matches.value;
 }
 
 /* Button Mode Functions */
@@ -218,6 +267,16 @@ function chaoshex_enter_btn_pressed() {
 		case "debug":
 			chaoshex_terminal_print("cmd : "+cmd);
 			chaoshex_terminal_print("chaoshex_text_callback_mode : "+chaoshex_text_callback_mode);
+			chaoshex_terminal_print("chaoshex_spell_mode : "+chaoshex_spell_mode);
+			chaoshex_terminal_print("chaoshex_spell_template : "+chaoshex_spell_template);
+			chaoshex_terminal_print("chaoshex_spell_target_x : "+chaoshex_spell_target_x);
+			chaoshex_terminal_print("chaoshex_spell_target_y : "+chaoshex_spell_target_y);
+			chaoshex_terminal_print("chaoshex_statement_of_intent : "+chaoshex_statement_of_intent);
+			chaoshex_terminal_print("chaoshex_enigmagick_api : "+chaoshex_enigmagick_api);
+			chaoshex_terminal_print("chaoshex_enigmagick_texts : "+JSON.stringify(chaoshex_enigmagick_texts));
+			chaoshex_terminal_print("chaoshex_enigmagick_ciphers : "+JSON.stringify(chaoshex_enigmagick_ciphers));
+			chaoshex_terminal_print("chaoshex_enigmagick_matches : "+JSON.stringify(chaoshex_enigmagick_matches));
+			chaoshex_terminal_print("chaoshex_enigmagick_value : "+chaoshex_enigmagick_value);
 			return true;
 			break;
 		case "login":
@@ -394,7 +453,12 @@ function chaoshex_enterY_btn_pressed() {
 }
 
 function chaoshex_confirm_spell() {
+	const randomCipher = chaoshex_enigmagick_ciphers.ciphers[Math.floor(Math.random() * chaoshex_enigmagick_ciphers.ciphers.length)].short_name;
+	const randomText = chaoshex_enigmagick_texts.texts[Math.floor(Math.random() * chaoshex_enigmagick_texts.texts.length)].file.slice(0, -4);
+	chaoshex_getMatches(chaoshex_statement_of_intent,randomCipher,randomText);
+
 	chaoshex_spell_mode = chaoshex_text_callback_mode;
+
 	chaoshex_terminal_print("");
 	chaoshex_terminal_print("Warning. Reality will be permanently altered. Continue? [Yes/No]");
 	chaoshex_terminal_print("");
