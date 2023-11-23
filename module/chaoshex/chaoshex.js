@@ -105,6 +105,13 @@ function chaoshex_display(content) {
 	// Confirm Menu options
 	$('#chaoshex_confirm_yes_btn').click(function(){ chaoshex_confirm_yes_btn_pressed(); });
 	$('#chaoshex_confirm_no_btn').click(function(){ chaoshex_confirm_no_btn_pressed(); });
+
+	$("#chaoshex_text_input").focus().on('keypress',function(e) {
+		if(e.which == 13) {
+			console.log('Enter!');
+			$(".chaoshex_enter_btn:visible").trigger("click");
+		}
+	});
 }
 
 function chaoshex_permlink(permlink) {
