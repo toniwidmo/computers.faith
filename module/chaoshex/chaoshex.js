@@ -183,7 +183,7 @@ function chaoshex_rectangle_hack() {
 	var height = Math.floor(Math.random() * (100-ycoord));
 	var rand_col = Math.floor(Math.random() * colours.length);
 	var colour = colours[rand_col];
-	var group = Math.floor(Math.random() * 9)+1;
+	var group = Math.floor(Math.random() * 5)+1;
 	var spell_class = ''
 	if(colour == 'x') {
 		colour = '#fc0;';
@@ -199,7 +199,7 @@ function chaoshex_randomBinary(min, max) {
 }
 
 function chaoshex_text_hack(hacks) {
-	var texts = ["01","%","EnigMagickValue","EnigMagickMatch","delete","default"];
+	var texts = ["01","%","EnigMagickValue","EnigMagickMatch","delete","move","resize","circle","default"];
 	var text = texts[Math.floor(Math.random() * texts.length)];
 
 	var xcoord = Math.floor(Math.random() * 95);
@@ -229,6 +229,44 @@ function chaoshex_text_hack(hacks) {
 				opacity: 0
 			}, 500);
 			text = "Clearing cache to remove evidence";
+			output = false;
+			break;
+		case "circle":
+			let bsize = Math.floor(Math.random() * 51);
+			// Apply fade to this whole group.
+			$('.chaoshex_hack_'+group).animate({
+				'border-radius': bsize+'%'
+			}, 1000);
+
+			text = "Trimming datasets";
+			output = false;
+			break;
+		case "move":
+			// Apply fade to this whole group.
+			$('.chaoshex_hack_'+group).animate({
+				'left': xcoord+'%'
+			}, 1000);
+			$('.chaoshex_hack_'+group).animate({
+				'top': ycoord+'%'
+			}, 1000);
+
+			text = "Reordering data";
+			output = false;
+			break;
+		case "resize":
+			let deg = Math.floor(Math.random() * 720);
+			// Apply fade to this whole group.
+			$('.chaoshex_hack_'+group).animate({
+				'width': xcoord+'%'
+			}, 1000);
+			$('.chaoshex_hack_'+group).animate({
+				'height': ycoord+'%'
+			}, 1000);
+			$('.chaoshex_hack_'+group).animate({
+				'font-size': size+'em'
+			}, 1000);
+
+			text = "Reordering data";
 			output = false;
 			break;
 		case "EnigMagickValue":
@@ -268,7 +306,7 @@ function chaoshex_text_hack(hacks) {
 		if(output) {
 			chaoshex_terminal_print(text);
 		}
-	} else {
+	} else if(size > 0) {
 		var width = Math.floor(Math.random() * (100-xcoord)/3)+5;
 		var height = Math.floor(Math.random() * (100-ycoord)/3)+5;
 		var rect = "<div class='chaoshex_hack chaoshex_hack_text_border chaoshex_"+chaoshex_spell_mode+" chaoshex_hack_"+group+"' style='position: fixed; font-size:"+size+"em; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; height: "+height+"%; animation: fading 5s;'>"+text+"</div>";
