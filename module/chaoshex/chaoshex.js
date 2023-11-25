@@ -13,8 +13,8 @@ var chaoshex_enigmagick_texts;
 var chaoshex_enigmagick_ciphers;
 var chaoshex_enigmagick_text;
 var chaoshex_enigmagick_cipher;
-var chaoshex_enigmagick_matches;
-var chaoshex_enigmagick_value;
+var chaoshex_enigmagick_matches = [];
+var chaoshex_enigmagick_value = 1;
 
 // Spell Settings
 var chaoshex_spell_mode;
@@ -49,7 +49,13 @@ function chaoshex_load(args) {
 	if(chaoshex_enigmagick_api_enabled) {
 		chaoshex_getCipherList();
 		chaoshex_getTextList();
-	} 
+	} else {
+		// ensure the 'gematria' button doesn't show up
+		$('#chaoshex_scry_gematria_btn').removeClass("chaoshex_btn_scry");
+
+		// and since there aren't any more 'scry' features, hide that button too.
+		$('#chaoshex_scry_btn').removeClass("chaoshex_btn_menu1");
+	}
 
 	chaoshex_display();
 	pushStateWithoutDuplicate('ChaosHex3', './?p=chaoshex/');
@@ -62,49 +68,59 @@ function chaoshex_display(content) {
 
 	// Now add click methods to the buttons.
 	// Enter Button
-	$('#chaoshex_enter_btn').click(function(){ chaoshex_enter_btn_pressed(); });
-	$('#chaoshex_enterX_btn').click(function(){ chaoshex_enterX_btn_pressed(); });
-	$('#chaoshex_enterY_btn').click(function(){ chaoshex_enterY_btn_pressed(); });
-	$('#chaoshex_enterYN_btn').click(function(){ chaoshex_enterYN_btn_pressed(); });
-	$('#chaoshex_enterCipher_btn').click(function(){ chaoshex_enterCipher_btn_pressed(); });
-	$('#chaoshex_enterText_btn').click(function(){ chaoshex_enterText_btn_pressed(); });
-	$('#chaoshex_enterSearch_btn').click(function(){ chaoshex_enterSearch_btn_pressed(); });
+	$('#chaoshex_enter_btn').click(function(e){ chaoshex_enter_btn_pressed(e); });
+	$('#chaoshex_enterX_btn').click(function(e){ chaoshex_enterX_btn_pressed(e); });
+	$('#chaoshex_enterY_btn').click(function(e){ chaoshex_enterY_btn_pressed(e); });
+	$('#chaoshex_enterYN_btn').click(function(e){ chaoshex_enterYN_btn_pressed(e); });
+	$('#chaoshex_enterCipher_btn').click(function(e){ chaoshex_enterCipher_btn_pressed(e); });
+	$('#chaoshex_enterText_btn').click(function(e){ chaoshex_enterText_btn_pressed(e); });
+	$('#chaoshex_enterSearch_btn').click(function(e){ chaoshex_enterSearch_btn_pressed(e); });
+	$('#chaoshex_enterQuery_btn').click(function(e){ chaoshex_enterQuery_btn_pressed(e); });
 
 	// Login Menu options...
-	$('#chaoshex_login_btn').click(function(){ chaoshex_login_btn_pressed(); });
+	$('#chaoshex_login_btn').click(function(e){ chaoshex_login_btn_pressed(e); });
 
 	// Top Menu options...
-	$('#chaoshex_cast_btn').click(function(){ chaoshex_cast_btn_pressed(); });
-	$('#chaoshex_scry_btn').click(function(){ chaoshex_scry_btn_pressed(); });
-	$('#chaoshex_summon_btn').click(function(){ chaoshex_summon_btn_pressed(); });
-	$('#chaoshex_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
-	$('#chaoshex_logout_btn').click(function(){ chaoshex_logout_btn_pressed(); });
+	$('#chaoshex_cast_btn').click(function(e){ chaoshex_cast_btn_pressed(e); });
+	$('#chaoshex_scry_btn').click(function(e){ chaoshex_scry_btn_pressed(e); });
+	$('#chaoshex_summon_btn').click(function(e){ chaoshex_summon_btn_pressed(e); });
+	$('#chaoshex_cls_btn').click(function(e){ chaoshex_cls_btn_pressed(e); });
+	$('#chaoshex_logout_btn').click(function(e){ chaoshex_logout_btn_pressed(e); });
 
 	// Cast Menu options...
-	$('#chaoshex_cast_cancel_btn').click(function(){ chaoshex_cancel_btn_pressed(); });
-	$('#chaoshex_cast_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
-	$('#chaoshex_cast_octarine_btn').click(function(){ chaoshex_octarine_btn_pressed(); });
-	$('#chaoshex_cast_psyche_btn').click(function(){ chaoshex_psyche_btn_pressed(); });
-	$('#chaoshex_cast_ego_btn').click(function(){ chaoshex_ego_btn_pressed(); });
-	$('#chaoshex_cast_play_btn').click(function(){ chaoshex_play_btn_pressed(); });
-	$('#chaoshex_cast_work_btn').click(function(){ chaoshex_work_btn_pressed(); });
-	$('#chaoshex_cast_death_btn').click(function(){ chaoshex_death_btn_pressed(); });
-	$('#chaoshex_cast_sex_btn').click(function(){ chaoshex_sex_btn_pressed(); });
-	$('#chaoshex_cast_war_btn').click(function(){ chaoshex_war_btn_pressed(); });
-	$('#chaoshex_cast_love_btn').click(function(){ chaoshex_love_btn_pressed(); });
+	$('#chaoshex_cast_cancel_btn').click(function(e){ chaoshex_cancel_btn_pressed(e); });
+	$('#chaoshex_cast_cls_btn').click(function(e){ chaoshex_cls_btn_pressed(e); });
+	$('#chaoshex_cast_octarine_btn').click(function(e){ chaoshex_octarine_btn_pressed(e); });
+	$('#chaoshex_cast_psyche_btn').click(function(e){ chaoshex_psyche_btn_pressed(e); });
+	$('#chaoshex_cast_ego_btn').click(function(e){ chaoshex_ego_btn_pressed(e); });
+	$('#chaoshex_cast_play_btn').click(function(e){ chaoshex_play_btn_pressed(e); });
+	$('#chaoshex_cast_work_btn').click(function(e){ chaoshex_work_btn_pressed(e); });
+	$('#chaoshex_cast_death_btn').click(function(e){ chaoshex_death_btn_pressed(e); });
+	$('#chaoshex_cast_sex_btn').click(function(e){ chaoshex_sex_btn_pressed(e); });
+	$('#chaoshex_cast_war_btn').click(function(e){ chaoshex_war_btn_pressed(e); });
+	$('#chaoshex_cast_love_btn').click(function(e){ chaoshex_love_btn_pressed(e); });
 
 	// Scry Menu options...
-	$('#chaoshex_cast_gematria_btn').click(function(){ chaoshex_gematria_btn_pressed(); });
-	$('#chaoshex_scry_cancel_btn').click(function(){ chaoshex_scry_cancel_btn_pressed(); });
-	$('#chaoshex_scry_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
+	$('#chaoshex_scry_gematria_btn').click(function(e){ chaoshex_gematria_btn_pressed(e); });
+	$('#chaoshex_scry_cancel_btn').click(function(e){ chaoshex_scry_cancel_btn_pressed(e); });
+	$('#chaoshex_scry_cls_btn').click(function(e){ chaoshex_cls_btn_pressed(e); });
+
+	// Gematria Menu options...
+	$('#chaoshex_gematria_value_btn').click(function(e){ chaoshex_gematria_value_btn_pressed(e); });
+	$('#chaoshex_gematria_query_btn').click(function(e){ chaoshex_gematria_query_btn_pressed(e); });
+	$('#chaoshex_gematria_matches_btn').click(function(e){ chaoshex_gematria_matches_btn_pressed(e); });
+	$('#chaoshex_gematria_cipher_btn').click(function(e){ chaoshex_gematria_cipher_btn_pressed(e); });
+	$('#chaoshex_gematria_text_btn').click(function(e){ chaoshex_gematria_text_btn_pressed(e); });
+	$('#chaoshex_gematria_cancel_btn').click(function(e){ chaoshex_gematria_cancel_btn_pressed(e); });
+	$('#chaoshex_gematria_cls_btn').click(function(e){ chaoshex_cls_btn_pressed(e); });
 
 	// Summon Menu options...
-	$('#chaoshex_summon_cancel_btn').click(function(){ chaoshex_summon_cancel_btn_pressed(); });
-	$('#chaoshex_summon_cls_btn').click(function(){ chaoshex_cls_btn_pressed(); });
+	$('#chaoshex_summon_cancel_btn').click(function(e){ chaoshex_summon_cancel_btn_pressed(e); });
+	$('#chaoshex_summon_cls_btn').click(function(e){ chaoshex_cls_btn_pressed(e); });
 
 	// Confirm Menu options
-	$('#chaoshex_confirm_yes_btn').click(function(){ chaoshex_confirm_yes_btn_pressed(); });
-	$('#chaoshex_confirm_no_btn').click(function(){ chaoshex_confirm_no_btn_pressed(); });
+	$('#chaoshex_confirm_yes_btn').click(function(e){ chaoshex_confirm_yes_btn_pressed(e); });
+	$('#chaoshex_confirm_no_btn').click(function(e){ chaoshex_confirm_no_btn_pressed(e); });
 
 	$("#chaoshex_text_input").focus().on('keypress',function(e) {
 		if(e.which == 13) {
@@ -160,15 +176,21 @@ function chaoshex_random_hack(hacks) {
 }
 
 function chaoshex_rectangle_hack() {
-	var colours = ["#f00","#0f0","#00f","#ff0","#f0f","#0ff"];
+	var colours = ["#f00","#0f0","#00f","#ff0","#f0f","#0ff","x"];
 	var xcoord = Math.floor(Math.random() * 95);
 	var ycoord = Math.floor(Math.random() * 95);
 	var width = Math.floor(Math.random() * (100-xcoord));
 	var height = Math.floor(Math.random() * (100-ycoord));
-	var rand_col = Math.floor(Math.random() * (6));
+	var rand_col = Math.floor(Math.random() * colours.length);
 	var colour = colours[rand_col];
+	var group = Math.floor(Math.random() * 9)+1;
+	var spell_class = ''
+	if(colour == 'x') {
+		colour = '#fc0;';
+		spell_class = "chaoshex_"+chaoshex_spell_mode;
+	}
 
-	var rect = "<div class='chaoshex_hack' style='background: "+colour+"; position: fixed; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; height: "+height+"%; animation: fading 5s;'></div>";
+	var rect = "<div class='chaoshex_hack "+spell_class+" chaoshex_hack_"+group+"' style='background: "+colour+"; position: fixed; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; height: "+height+"%; animation: fading 5s;'></div>";
 	$("#chaoshex_terminal").append(rect);
 }
 
@@ -177,12 +199,15 @@ function chaoshex_randomBinary(min, max) {
 }
 
 function chaoshex_text_hack(hacks) {
-	var texts = ["01","%","Access Denied. Rerouting.","Target Data Located","Poisoning Trace","Corrupting Logs","EnigMagickValue","EnigMagickMatch"];
-	var text = texts[Math.floor(Math.random() * 8)];
+	var texts = ["01","%","EnigMagickValue","EnigMagickMatch","delete","default"];
+	var text = texts[Math.floor(Math.random() * texts.length)];
 
 	var xcoord = Math.floor(Math.random() * 95);
 	var ycoord = Math.floor(Math.random() * 95);
 	var size = Math.floor(Math.random() * 50)/10;
+	var group = Math.floor(Math.random() * 5)+1;
+	var output = Math.floor(Math.random() * 10) > 7;
+
 	switch(text) {
 		case "01":
 			let binary_size = Math.floor(Math.random() * 32) + 16;
@@ -191,36 +216,62 @@ function chaoshex_text_hack(hacks) {
 			for(i=0; i<binary_size; i++) {
 				text += chaoshex_randomBinary(0,65535);
 			}
+			output = false;
 			break;
 		case "%":
 			percent = Math.floor(((chaoshex_hacks-hacks)/chaoshex_hacks)*100);
 			text = percent+"% of neccessary updates to reality complete";
+			output = false;
+			break;
+		case "delete":
+			// Apply fade to this whole group.
+			$('.chaoshex_hack_'+group).animate({
+				opacity: 0
+			}, 500);
+			text = "Clearing cache to remove evidence";
+			output = false;
 			break;
 		case "EnigMagickValue":
 			if(chaoshex_enigmagick_api_enabled) {
 				text = chaoshex_enigmagick_value;
 				size = size + 2;
 			} else {
-				text = "Value unobtainable";
+				text = "Value unobtainable on this node, rerouting...";
 			}
+			output = false;
 			break;
 		case "EnigMagickMatch":
 			if(chaoshex_enigmagick_api_enabled) {
 				// Select a random match to display...
-				text = chaoshex_enigmagick_matches[Math.floor(Math.random() * chaoshex_enigmagick_matches.length)];
+				if(typeof chaoshex_enigmagick_matches === "undefined" || chaoshex_enigmagick_matches === null) {
+					text = "Initiating Data Search";
+					output = false;
+				} else {
+					text = chaoshex_enigmagick_matches[Math.floor(Math.random() * chaoshex_enigmagick_matches.length)];
+				}
 			} else {
 				text = "Hivemind fixing reality";
+				output = false;
 			}
 			break;
+		default:
+			var texts = ["Accessing New Node","Root Access Obtained","Evading Detection","Rerouting to bypass Firewall","Target Data Located","Poisoning Trace","Corrupting Logs","∘{𝒵}~","⍼","-[>|<]-","🥨"];
+			var text = texts[Math.floor(Math.random() * texts.length)];
+			size = size + 0.5;
 	}
+
+	
 
 	if(size > 2) {
 		var width = Math.floor(Math.random() * (100-xcoord));
-		var rect = "<div class='chaoshex_hack chaoshex_hack_text chaoshex_"+chaoshex_spell_mode+"' style='position: fixed; font-size:"+size+"em; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; animation: fading 6s;'>"+text+"</div>";
+		var rect = "<div class='chaoshex_hack chaoshex_hack_text chaoshex_hack_"+group+"' style='position: fixed; font-size:"+size+"em; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; animation: fading 6s;'>"+text+"</div>";
+		if(output) {
+			chaoshex_terminal_print(text);
+		}
 	} else {
 		var width = Math.floor(Math.random() * (100-xcoord)/3)+5;
 		var height = Math.floor(Math.random() * (100-ycoord)/3)+5;
-		var rect = "<div class='chaoshex_hack chaoshex_hack_text_border chaoshex_"+chaoshex_spell_mode+"' style='position: fixed; font-size:"+size+"em; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; height: "+height+"%; animation: fading 5s;'>"+text+"</div>";
+		var rect = "<div class='chaoshex_hack chaoshex_hack_text_border chaoshex_"+chaoshex_spell_mode+" chaoshex_hack_"+group+"' style='position: fixed; font-size:"+size+"em; left: "+xcoord+"%; top: "+ycoord+"%; width: "+width+"%; height: "+height+"%; animation: fading 5s;'>"+text+"</div>";
 	}
 	$("#chaoshex_terminal").append(rect);
 }
@@ -235,6 +286,7 @@ function chaoshex_getCipherList() {
 } 
 function chaoshex_processCipherList(ciphers) {
 	chaoshex_enigmagick_ciphers = ciphers;
+	if(typeof chaoshex_enigmagick_cipher === "undefined"  || chaoshex_enigmagick_cipher == null) chaoshex_enigmagick_cipher = chaoshex_enigmagick_ciphers.ciphers[0];
 }
 function chaoshex_getTextList() {
 	$.ajax({
@@ -244,6 +296,7 @@ function chaoshex_getTextList() {
 } 
 function chaoshex_processTextList(texts) {
 	chaoshex_enigmagick_texts = texts;
+	if(typeof chaoshex_enigmagick_text === "undefined" || chaoshex_enigmagick_text == null) chaoshex_enigmagick_text = chaoshex_enigmagick_texts.texts[0];
 }
 function chaoshex_getMatches(search,cipher,text) {
 	chaoshex_enigmagick_matches = null;
@@ -256,15 +309,41 @@ function chaoshex_processMatches(matches) {
 	chaoshex_enigmagick_matches = matches.matches;
 	chaoshex_enigmagick_value = matches.value;
 
-	if(chaoshex_text_callback_mode == "scry") {
+	if(chaoshex_text_callback_mode == "value") {
 		// Display results
 		chaoshex_terminal_print("Value : "+matches.value);
-		for(i=0; i < matches.matches.length; i++) {
-			chaoshex_terminal_print((i+1)+") "+matches.matches[i]);
-		}
+		chaoshex_terminal_print(matches.matches.length+" matches found in "+chaoshex_enigmagick_text.title);
+		chaoshex_terminal_print("");
+		
 		chaoshex_enter_display("");
 		chaoshex_change_prompt("");
+		chaoshex_text_callback_mode = "gematria"
 	}
+	if(chaoshex_text_callback_mode == "query") {
+		chaoshex_terminal_print("");
+		// Display results
+		for(i=0; i<5; i++) {
+			text = chaoshex_enigmagick_matches[Math.floor(Math.random() * chaoshex_enigmagick_matches.length)];
+			chaoshex_terminal_print(text);
+		}
+		chaoshex_terminal_print("");
+		
+		chaoshex_enter_display("");
+		chaoshex_change_prompt("");
+		chaoshex_text_callback_mode = "gematria"
+	}
+}
+
+function chaoshex_showMatches() {
+	// Display results
+	let matches = [];
+	for(i=0; i < chaoshex_enigmagick_matches.length; i++) {
+		matches[i] = (i+1)+") "+chaoshex_enigmagick_matches[i];
+		//chaoshex_terminal_print((i+1)+") "+chaoshex_enigmagick_matches[i]);
+	}
+	chaoshex_terminal_xprint(matches);
+	chaoshex_enter_display("");
+	chaoshex_change_prompt("");
 }
 
 /* Button Mode Functions */
@@ -281,7 +360,7 @@ function chaoshex_enter_display(mode) {
 }
 
 /* Button Press Functions */
-function chaoshex_enter_btn_pressed() {
+function chaoshex_enter_btn_pressed(e) {
 	let cmd = $("#chaoshex_text_input").val();
 	chaoshex_terminal_print(chaoshex_prompt+" "+cmd);
 	$("#chaoshex_text_input").val("");
@@ -296,10 +375,16 @@ function chaoshex_enter_btn_pressed() {
 			chaoshex_terminal_print("chaoshex_spell_target_y : "+chaoshex_spell_target_y);
 			chaoshex_terminal_print("chaoshex_statement_of_intent : "+chaoshex_statement_of_intent);
 			chaoshex_terminal_print("chaoshex_enigmagick_api : "+chaoshex_enigmagick_api);
-			chaoshex_terminal_print("chaoshex_enigmagick_texts : "+JSON.stringify(chaoshex_enigmagick_texts));
-			chaoshex_terminal_print("chaoshex_enigmagick_ciphers : "+JSON.stringify(chaoshex_enigmagick_ciphers));
-			chaoshex_terminal_print("chaoshex_enigmagick_matches : "+JSON.stringify(chaoshex_enigmagick_matches));
+			chaoshex_terminal_print("chaoshex_enigmagick_text : "+JSON.stringify(chaoshex_enigmagick_text));
+			chaoshex_terminal_print("chaoshex_enigmagick_cipher : "+JSON.stringify(chaoshex_enigmagick_cipher));
 			chaoshex_terminal_print("chaoshex_enigmagick_value : "+chaoshex_enigmagick_value);
+			chaoshex_terminal_print("");
+			chaoshex_terminal_print("chaoshex_enigmagick_texts : "+JSON.stringify(chaoshex_enigmagick_texts));
+			chaoshex_terminal_print("");
+			chaoshex_terminal_print("chaoshex_enigmagick_ciphers : "+JSON.stringify(chaoshex_enigmagick_ciphers));
+			chaoshex_terminal_print("");
+			chaoshex_terminal_print("chaoshex_enigmagick_matches : "+JSON.stringify(chaoshex_enigmagick_matches));
+			chaoshex_terminal_print("");
 			return true;
 			break;
 		case "login":
@@ -455,6 +540,51 @@ function chaoshex_enter_btn_pressed() {
 				return false;
 			}
 			break;
+		case 'cipher':
+			if(chaoshex_text_callback_mode == 'gematria') {
+				chaoshex_gematria_cipher_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
+			break;
+		case 'text':
+			if(chaoshex_text_callback_mode == 'gematria') {
+				chaoshex_gematria_text_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
+			break;
+		case 'matches':
+			if(chaoshex_text_callback_mode == 'gematria') {
+				chaoshex_showMatches();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
+			break;
+		case 'query':
+			if(chaoshex_text_callback_mode == 'gematria') {
+				chaoshex_gematria_query_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
+			break;
+		case 'value':
+			if(chaoshex_text_callback_mode == 'gematria') {
+				chaoshex_gematria_value_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
+			break;
 		default:
 			switch(chaoshex_text_callback_mode) {
 				case "octarine":
@@ -501,7 +631,7 @@ function chaoshex_enter_btn_pressed() {
 	return false;
 }
 
-function chaoshex_enterX_btn_pressed() {
+function chaoshex_enterX_btn_pressed(e) {
 	chaoshex_spell_target_x = $("#chaoshex_text_input").val();
 	$("#chaoshex_text_input").val("");
 	chaoshex_terminal_print(chaoshex_prompt+" "+chaoshex_spell_target_x);
@@ -517,7 +647,7 @@ function chaoshex_enterX_btn_pressed() {
 	}
 }
 
-function chaoshex_enterY_btn_pressed() {
+function chaoshex_enterY_btn_pressed(e) {
 	chaoshex_spell_target_y = $("#chaoshex_text_input").val();
 	$("#chaoshex_text_input").val("");
 	chaoshex_terminal_print(chaoshex_prompt+" "+chaoshex_spell_target_y);
@@ -533,7 +663,7 @@ function chaoshex_confirm_spell() {
 	const randomText = chaoshex_enigmagick_texts.texts[Math.floor(Math.random() * chaoshex_enigmagick_texts.texts.length)].file.slice(0, -4);
 	chaoshex_getMatches(chaoshex_statement_of_intent,randomCipher,randomText);
 
-	chaoshex_spell_mode = chaoshex_text_callback_mode;
+	//chaoshex_spell_mode = chaoshex_text_callback_mode;
 
 	chaoshex_terminal_print("");
 	chaoshex_terminal_print("Warning. Reality will be permanently altered. Continue? [Yes/No]");
@@ -543,17 +673,17 @@ function chaoshex_confirm_spell() {
 	chaoshex_change_prompt("Confirm [Y/N]");
 }
 
-function chaoshex_confirm_yes_btn_pressed() {
+function chaoshex_confirm_yes_btn_pressed(e) {
 	$("#chaoshex_text_input").val("Y");
 	chaoshex_enterYN_btn_pressed();
 }
-function chaoshex_confirm_no_btn_pressed() {
+function chaoshex_confirm_no_btn_pressed(e) {
 	$("#chaoshex_text_input").val("N");
 	chaoshex_enterYN_btn_pressed();
 }
 
 
-function chaoshex_enterYN_btn_pressed() {
+function chaoshex_enterYN_btn_pressed(e) {
 	confirm_yn = $("#chaoshex_text_input").val();
 	$("#chaoshex_text_input").val("");
 	chaoshex_terminal_print(chaoshex_prompt+" "+confirm_yn);
@@ -573,7 +703,7 @@ function chaoshex_enterYN_btn_pressed() {
 	}
 }
 
-function chaoshex_login_btn_pressed() {
+function chaoshex_login_btn_pressed(e) {
 	$("#chaoshex_text_input").val("login");
 	chaoshex_enter_btn_pressed();
 }
@@ -590,32 +720,32 @@ function chaoshex_login_action() {
 	}, 800);
 	setTimeout(function () {
 		chaoshex_terminal_type("[");
-	}, 900);
+	}, 850);
 	setTimeout(function () {
 		chaoshex_terminal_type(">");
-	}, 1000);
+	}, 900);
 	setTimeout(function () {
 		chaoshex_terminal_type("|");
-	}, 1100);
+	}, 950);
 	setTimeout(function () {
 		chaoshex_terminal_type("<");
-	}, 1200);
+	}, 1000);
 	setTimeout(function () {
 		chaoshex_terminal_type("]");
-	}, 1300);
+	}, 1050);
 	setTimeout(function () {
 		chaoshex_terminal_type("-");
-	}, 1400);
+	}, 1100);
 	setTimeout(function () {
 		chaoshex_terminal_print("Hivemind Connection Successfull");
 		chaoshex_terminal_print("Welcome anon23 to the ChaosHex Hivemind");
 		chaoshex_btn_display('menu1');
 		chaoshex_terminal_print("Please select a command...");
 		chaoshex_terminal_print("");
-	}, 1500);
+	}, 1150);
 }
 
-function chaoshex_logout_btn_pressed() {
+function chaoshex_logout_btn_pressed(e) {
 	$("#chaoshex_text_input").val("logout");
 	chaoshex_enter_btn_pressed();
 }
@@ -641,7 +771,7 @@ function chaoshex_logout_action() {
 	}, 1000);
 }
 
-function chaoshex_cls_btn_pressed() {
+function chaoshex_cls_btn_pressed(e) {
 	$("#chaoshex_text_input").val("cls");
 	chaoshex_enter_btn_pressed();
 }
@@ -654,7 +784,7 @@ function chaoshex_cls_action() {
 }
 
 // Cast btn and cast menu buttons...
-function chaoshex_cast_btn_pressed() {
+function chaoshex_cast_btn_pressed(e) {
 	$("#chaoshex_text_input").val("cast");
 	chaoshex_enter_btn_pressed();
 }
@@ -671,7 +801,7 @@ function chaoshex_cast_action() {
 	}, 500);
 }
 
-function chaoshex_cancel_btn_pressed() {
+function chaoshex_cancel_btn_pressed(e) {
 	$("#chaoshex_text_input").val("cancel");
 	chaoshex_enter_btn_pressed();
 }
@@ -686,7 +816,7 @@ function chaoshex_cast_cancel_action() {
 	}, 500);
 }
 
-function chaoshex_octarine_btn_pressed() {
+function chaoshex_octarine_btn_pressed(e) {
 	$("#chaoshex_text_input").val("octarine");
 	chaoshex_enter_btn_pressed();
 }
@@ -705,7 +835,7 @@ function chaoshex_octarine_action() {
 	}, 500);
 }
 
-function chaoshex_octarine_cancel_btn_pressed() {
+function chaoshex_octarine_cancel_btn_pressed(e) {
 	console.log("cast cancel function reached.");
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
@@ -716,7 +846,7 @@ function chaoshex_octarine_cancel_btn_pressed() {
 }
 
 
-function chaoshex_psyche_btn_pressed() {
+function chaoshex_psyche_btn_pressed(e) {
 	$("#chaoshex_text_input").val("psyche");
 	chaoshex_enter_btn_pressed();
 }
@@ -736,7 +866,7 @@ function chaoshex_psyche_action() {
 	}, 500);
 }
 
-function chaoshex_psyche_cancel_btn_pressed() {
+function chaoshex_psyche_cancel_btn_pressed(e) {
 	console.log("cast psyche cancel function reached.");
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
@@ -747,7 +877,7 @@ function chaoshex_psyche_cancel_btn_pressed() {
 }
 
 
-function chaoshex_ego_btn_pressed() {
+function chaoshex_ego_btn_pressed(e) {
 	$("#chaoshex_text_input").val("ego");
 	chaoshex_enter_btn_pressed();
 }
@@ -767,7 +897,7 @@ function chaoshex_ego_action() {
 	}, 500);
 }
 
-function chaoshex_ego_cancel_btn_pressed() {
+function chaoshex_ego_cancel_btn_pressed(e) {
 	console.log("cast ego cancel function reached.");
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
@@ -778,7 +908,7 @@ function chaoshex_ego_cancel_btn_pressed() {
 }
 
 
-function chaoshex_play_btn_pressed() {
+function chaoshex_play_btn_pressed(e) {
 	$("#chaoshex_text_input").val("play");
 	chaoshex_enter_btn_pressed();
 }
@@ -798,7 +928,7 @@ function chaoshex_play_action() {
 	}, 500);
 }
 
-function chaoshex_play_cancel_btn_pressed() {
+function chaoshex_play_cancel_btn_pressed(e) {
 	console.log("cast play cancel function reached.");
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
@@ -809,7 +939,7 @@ function chaoshex_play_cancel_btn_pressed() {
 }
 
 
-function chaoshex_work_btn_pressed() {
+function chaoshex_work_btn_pressed(e) {
 	$("#chaoshex_text_input").val("work");
 	chaoshex_enter_btn_pressed();
 }
@@ -829,7 +959,7 @@ function chaoshex_work_action() {
 	}, 500);
 }
 
-function chaoshex_work_cancel_btn_pressed() {
+function chaoshex_work_cancel_btn_pressed(e) {
 	console.log("cast work cancel function reached.");
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
@@ -840,7 +970,7 @@ function chaoshex_work_cancel_btn_pressed() {
 }
 
 
-function chaoshex_death_btn_pressed() {
+function chaoshex_death_btn_pressed(e) {
 	$("#chaoshex_text_input").val("death");
 	chaoshex_enter_btn_pressed();
 }
@@ -860,7 +990,7 @@ function chaoshex_death_action() {
 	}, 500);
 }
 
-function chaoshex_death_cancel_btn_pressed() {
+function chaoshex_death_cancel_btn_pressed(e) {
 	console.log("cast cancel function reached.");
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
@@ -871,7 +1001,7 @@ function chaoshex_death_cancel_btn_pressed() {
 }
 
 
-function chaoshex_sex_btn_pressed() {
+function chaoshex_sex_btn_pressed(e) {
 	$("#chaoshex_text_input").val("sex");
 	chaoshex_enter_btn_pressed();
 }
@@ -891,7 +1021,7 @@ function chaoshex_sex_action() {
 	}, 500);
 }
 
-function chaoshex_sex_cancel_btn_pressed() {
+function chaoshex_sex_cancel_btn_pressed(e) {
 	console.log("cast cancel function reached.");
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
@@ -902,7 +1032,7 @@ function chaoshex_sex_cancel_btn_pressed() {
 }
 
 
-function chaoshex_war_btn_pressed() {
+function chaoshex_war_btn_pressed(e) {
 	$("#chaoshex_text_input").val("war");
 	chaoshex_enter_btn_pressed();
 }
@@ -922,7 +1052,7 @@ function chaoshex_war_action() {
 	}, 500);
 }
 
-function chaoshex_war_cancel_btn_pressed() {
+function chaoshex_war_cancel_btn_pressed(e) {
 	console.log("cast war cancel function reached.");
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
@@ -933,7 +1063,7 @@ function chaoshex_war_cancel_btn_pressed() {
 }
 
 
-function chaoshex_love_btn_pressed() {
+function chaoshex_love_btn_pressed(e) {
 	$("#chaoshex_text_input").val("love");
 	chaoshex_enter_btn_pressed();
 }
@@ -953,7 +1083,7 @@ function chaoshex_love_action() {
 	}, 500);
 }
 
-function chaoshex_love_cancel_btn_pressed() {
+function chaoshex_love_cancel_btn_pressed(e) {
 	console.log("cast love cancel function reached.");
 	chaoshex_terminal_print("Spell cancelled");
 	setTimeout(function () {
@@ -964,14 +1094,13 @@ function chaoshex_love_cancel_btn_pressed() {
 }
 
 // Scry button and scry menu buttons
-function chaoshex_scry_btn_pressed() {
+function chaoshex_scry_btn_pressed(e) {
 	$("#chaoshex_text_input").val("scry");
 	chaoshex_enter_btn_pressed();
 }
 
 function chaoshex_scry_action() {
 	console.log("scry function reached.");
-	chaoshex_terminal_print("-]&gt;|&lt;[- : scry");
 	chaoshex_terminal_print("Divination with ChaosHex");
 	chaoshex_terminal_print("");
 	setTimeout(function () {
@@ -982,7 +1111,7 @@ function chaoshex_scry_action() {
 	}, 500);
 }
 
-function chaoshex_scry_cancel_btn_pressed() {
+function chaoshex_scry_cancel_btn_pressed(e) {
 	console.log("scry cancel function reached.");
 	chaoshex_terminal_print("-]&gt;|&lt;[- : cancel");
 	chaoshex_terminal_print("Divination cancelled");
@@ -993,7 +1122,7 @@ function chaoshex_scry_cancel_btn_pressed() {
 	}, 500);
 }
 
-function chaoshex_gematria_btn_pressed() {
+function chaoshex_gematria_btn_pressed(e) {
 	console.log("gematria btn function reached.");
 	$("#chaoshex_text_input").val("gematria");
 	chaoshex_enter_btn_pressed();
@@ -1006,15 +1135,14 @@ function chaoshex_gematria_action() {
 	if(chaoshex_enigmagick_api_enabled) {
 		chaoshex_terminal_print("Accessing EnigMagick");
 		chaoshex_terminal_print("");
+		chaoshex_terminal_print("Current Cipher: "+chaoshex_enigmagick_cipher.name);
+		chaoshex_terminal_print("Current Text: "+chaoshex_enigmagick_text.title);
+		chaoshex_terminal_print("Current Value: "+chaoshex_enigmagick_value);
+		chaoshex_terminal_print("Matches: "+chaoshex_enigmagick_matches.length);
+		chaoshex_terminal_print("");
 
 		setTimeout(function () {
-			chaoshex_terminal_print("Select cipher: ");
-			chaoshex_terminal_print("");
-			for(i=0; i < chaoshex_enigmagick_ciphers.ciphers.length; i++) {
-				chaoshex_terminal_print(i+") "+chaoshex_enigmagick_ciphers.ciphers[i].name);
-			}
-			chaoshex_change_prompt("Cipher: ");
-			chaoshex_enter_display("Cipher");
+			chaoshex_btn_display('gematria');
 		}, 500);
 	} else {
 		chaoshex_terminal_print("EnigMagick Unavailable.");
@@ -1023,7 +1151,74 @@ function chaoshex_gematria_action() {
 	}
 
 }
-function chaoshex_enterCipher_btn_pressed() {
+function chaoshex_gematria_cancel_btn_pressed(e) {
+	console.log("gematria cancel function reached.");
+	chaoshex_terminal_print("-]&gt;|&lt;[- : cancel");
+	chaoshex_terminal_print("Gematria cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
+		chaoshex_btn_display('scry');
+	}, 500);
+}
+
+function chaoshex_gematria_cipher_btn_pressed(e) {
+	$("#chaoshex_text_input").val("cipher");
+	chaoshex_enter_btn_pressed();
+}
+function chaoshex_gematria_cipher_action() {
+	console.log("gematria cipher action function reached.");
+
+	chaoshex_terminal_print("Select cipher: ");
+	chaoshex_terminal_print("");
+	for(i=0; i < chaoshex_enigmagick_ciphers.ciphers.length; i++) {
+		chaoshex_terminal_print(i+") "+chaoshex_enigmagick_ciphers.ciphers[i].name);
+	}
+	chaoshex_change_prompt("Cipher: ");
+	chaoshex_enter_display("Cipher");
+}
+function chaoshex_gematria_text_btn_pressed(e) {
+	$("#chaoshex_text_input").val("text");
+	chaoshex_enter_btn_pressed();
+}
+function chaoshex_gematria_text_action() {
+	console.log("gematria text action function reached.");
+
+	chaoshex_terminal_print("Select text: ");
+	chaoshex_terminal_print("");
+	for(i=0; i < chaoshex_enigmagick_texts.texts.length; i++) {
+		chaoshex_terminal_print(i+") "+chaoshex_enigmagick_texts.texts[i].title);
+	}
+	chaoshex_change_prompt("Text: ");
+	chaoshex_enter_display("Text");
+}
+function chaoshex_gematria_value_btn_pressed(e) {
+	$("#chaoshex_text_input").val("value");
+	chaoshex_enter_btn_pressed();
+}
+function chaoshex_gematria_value_action() {
+	setTimeout(function () {
+		chaoshex_terminal_print("Enter string to evaluate: ");
+		chaoshex_terminal_print("");
+		
+		chaoshex_change_prompt("Search: ");
+		chaoshex_enter_display("Search");
+	}, 500);
+}
+function chaoshex_gematria_query_btn_pressed(e) {
+	$("#chaoshex_text_input").val("query");
+	chaoshex_enter_btn_pressed();
+}
+function chaoshex_gematria_query_action() {
+	setTimeout(function () {
+		chaoshex_terminal_print("Ask a question for this divination: ");
+		chaoshex_terminal_print("");
+		
+		chaoshex_change_prompt("Query: ");
+		chaoshex_enter_display("Query");
+	}, 500);
+}
+function chaoshex_enterCipher_btn_pressed(e) {
 	console.log("enter cipher function reached.");
 
 	let cmd = $("#chaoshex_text_input").val();
@@ -1041,17 +1236,10 @@ function chaoshex_enterCipher_btn_pressed() {
 	chaoshex_terminal_print("Cipher selected: "+chaoshex_enigmagick_cipher.name);
 	chaoshex_terminal_print("");
 
-	setTimeout(function () {
-		chaoshex_terminal_print("Select text: ");
-		chaoshex_terminal_print("");
-		for(i=0; i < chaoshex_enigmagick_texts.texts.length; i++) {
-			chaoshex_terminal_print(i+") "+chaoshex_enigmagick_texts.texts[i].title);
-		}
-		chaoshex_change_prompt("Text: ");
-		chaoshex_enter_display("Text");
-	}, 500);
+	chaoshex_change_prompt("");
+	chaoshex_enter_display("");
 }
-function chaoshex_enterText_btn_pressed() {
+function chaoshex_enterText_btn_pressed(e) {
 	console.log("enter text function reached.");
 
 	let cmd = $("#chaoshex_text_input").val();
@@ -1069,15 +1257,11 @@ function chaoshex_enterText_btn_pressed() {
 	chaoshex_terminal_print("Text selected: "+chaoshex_enigmagick_text.title);
 	chaoshex_terminal_print("");
 
-	setTimeout(function () {
-		chaoshex_terminal_print("Enter string to evaluate: ");
-		chaoshex_terminal_print("");
-		
-		chaoshex_change_prompt("Search: ");
-		chaoshex_enter_display("Search");
-	}, 500);
+	chaoshex_change_prompt("");
+	chaoshex_enter_display("");
 }
-function chaoshex_enterSearch_btn_pressed() {
+
+function chaoshex_enterSearch_btn_pressed(e) {
 	console.log("enter search function reached.");
 
 	let cmd = $("#chaoshex_text_input").val();
@@ -1085,12 +1269,29 @@ function chaoshex_enterSearch_btn_pressed() {
 
 	chaoshex_change_prompt("Searching... ");
 	chaoshex_enter_display("Searching");
+	chaoshex_text_callback_mode = 'value';
 
 	chaoshex_getMatches(cmd,chaoshex_enigmagick_cipher.short_name,chaoshex_enigmagick_text.file.slice(0, -4));
 }
+function chaoshex_enterQuery_btn_pressed(e) {
+	console.log("enter search function reached.");
+
+	let cmd = $("#chaoshex_text_input").val();
+	chaoshex_terminal_print(chaoshex_prompt+" "+cmd);
+
+	chaoshex_change_prompt("Searching... ");
+	chaoshex_enter_display("Searching");
+	chaoshex_text_callback_mode = 'query';
+
+	chaoshex_getMatches(cmd,chaoshex_enigmagick_cipher.short_name,chaoshex_enigmagick_text.file.slice(0, -4));
+}
+function chaoshex_gematria_matches_btn_pressed() {
+	$("#chaoshex_text_input").val("matches");
+	chaoshex_enter_btn_pressed();
+}
 
 // Summon button and summon menu buttons
-function chaoshex_summon_btn_pressed() {
+function chaoshex_summon_btn_pressed(e) {
 	$("#chaoshex_text_input").val("summon");
 	chaoshex_enter_btn_pressed();
 }
@@ -1107,7 +1308,7 @@ function chaoshex_summon_action() {
 	}, 500);
 }
 
-function chaoshex_summon_cancel_btn_pressed() {
+function chaoshex_summon_cancel_btn_pressed(e) {
 	console.log("summon cancel function reached.");
 	chaoshex_terminal_print("-]&gt;|&lt;[- : cancel");
 	chaoshex_terminal_print("Evocation cancelled");
@@ -1178,6 +1379,19 @@ function chaoshex_terminal_print(html) {
 	var line = `<p class="chaoshex_cls">${html}</p>`; 
 console.log(line);
 	$(line).insertBefore("#chaoshex_prompt");
+	$('#chaoshex_terminal').animate({
+		scrollTop: $("#chaoshex_terminal").prop("scrollHeight")
+	}, 200);
+}
+function chaoshex_terminal_xprint(str_array) {
+	// Add str to terminal
+	let html;
+	for(i=0; i < str_array.length; i++) {
+		html = str_array[i];
+		if(html == '') { html = "&nbsp;"}
+		var line = `<p class="chaoshex_cls">${html}</p>`; 
+		$(line).insertBefore("#chaoshex_prompt");
+	}
 	$('#chaoshex_terminal').animate({
 		scrollTop: $("#chaoshex_terminal").prop("scrollHeight")
 	}, 200);
