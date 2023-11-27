@@ -90,6 +90,7 @@ function chaoshex_display(content) {
 	// Cast Menu options...
 	$('#chaoshex_cast_cancel_btn').click(function(e){ chaoshex_cancel_btn_pressed(e); });
 	$('#chaoshex_cast_cls_btn').click(function(e){ chaoshex_cls_btn_pressed(e); });
+	$('#chaoshex_cast_custom_btn').click(function(e){ chaoshex_custom_btn_pressed(e); });
 	$('#chaoshex_cast_octarine_btn').click(function(e){ chaoshex_octarine_btn_pressed(e); });
 	$('#chaoshex_cast_psyche_btn').click(function(e){ chaoshex_psyche_btn_pressed(e); });
 	$('#chaoshex_cast_ego_btn').click(function(e){ chaoshex_ego_btn_pressed(e); });
@@ -183,7 +184,7 @@ function chaoshex_rectangle_hack() {
 	var height = Math.floor(Math.random() * (100-ycoord));
 	var rand_col = Math.floor(Math.random() * colours.length);
 	var colour = colours[rand_col];
-	var group = Math.floor(Math.random() * 5)+1;
+	var group = Math.floor(Math.random() * 9)+1;
 	var spell_class = ''
 	if(colour == 'x') {
 		colour = '#fc0;';
@@ -205,7 +206,7 @@ function chaoshex_text_hack(hacks) {
 	var xcoord = Math.floor(Math.random() * 95);
 	var ycoord = Math.floor(Math.random() * 95);
 	var size = Math.floor(Math.random() * 50)/10;
-	var group = Math.floor(Math.random() * 5)+1;
+	var group = Math.floor(Math.random() * 9)+1;
 	var output = Math.floor(Math.random() * 10) > 7;
 
 	switch(text) {
@@ -478,6 +479,15 @@ function chaoshex_enter_btn_pressed(e) {
 		case "cast":
 			if(chaoshex_text_callback_mode == 'menu1') {
 				chaoshex_cast_action();
+				return true;
+			} else {
+				chaoshex_cmd_not_available();
+				return false;
+			}
+			break;
+		case "custom":
+			if(chaoshex_text_callback_mode == 'cast') {
+				chaoshex_custom_action();
 				return true;
 			} else {
 				chaoshex_cmd_not_available();
@@ -851,6 +861,33 @@ function chaoshex_cast_cancel_action() {
 		chaoshex_terminal_print("");
 		chaoshex_change_prompt("");
 		chaoshex_btn_display('menu1');
+	}, 500);
+}
+
+function chaoshex_custom_btn_pressed(e) {
+	$("#chaoshex_text_input").val("custom");
+	chaoshex_enter_btn_pressed();
+}
+
+function chaoshex_custom_action() {
+	console.log("cast custom spell function reached.");
+	chaoshex_terminal_print("Casting a spell with custom Statement of Intent");
+	chaoshex_terminal_print("");
+	setTimeout(function () {
+		chaoshex_spell_template = "[X]";
+		chaoshex_terminal_print("Statement of Intent: '"+chaoshex_spell_template+"'");
+		chaoshex_enter_display('X');
+		chaoshex_change_prompt("Choose [X]: ");
+	}, 500);
+}
+
+function chaoshex_custom_cancel_btn_pressed(e) {
+	console.log("cast cancel function reached.");
+	chaoshex_terminal_print("Spell cancelled");
+	setTimeout(function () {
+		chaoshex_terminal_print("");
+		chaoshex_change_prompt("");
+		chaoshex_btn_display('cast');
 	}, 500);
 }
 
