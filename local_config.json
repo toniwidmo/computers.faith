@@ -14,7 +14,7 @@
 	"firstpage": {"type": "html", "args": ["m.html"]},
 
 	"menu": [
-    {"label": "Agent M", "type": "html", "args": ["m.html"]},
+    {"label": "Toni Widmo", "type": "html", "args": ["m.html"]},
     {"label": "ChaosHex", "type": "chaoshex", "args": [""]},
     {"label": "About ChaosHex", "type": "html", "args": ["chaoshex.html"]},
     {"label": "EnigMagick", "type": "enigmagick", "args": [""]},
